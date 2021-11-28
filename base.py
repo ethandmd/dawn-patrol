@@ -9,3 +9,8 @@ class GameItem:
         msg = f"Name: {self.name}\nDescription: {self.desc}"
 
         return msg
+
+    def save(self):
+        '''Method for saving game items.'''
+        
+        return {self.name : {'desc': self.desc, 'loc':self.loc.name}}
