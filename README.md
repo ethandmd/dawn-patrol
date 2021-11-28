@@ -1,6 +1,11 @@
 # The Last Dawn Patrol
 
-## The Setup:
+## Requirements:
+
+- Python >= 3.7
+- Tkinter (for GUI)
+
+## The Story:
 
 It's the last chance you'll have to catch the perfect begin morning nautical twilight set on a Tuesday. Generally, 
 
