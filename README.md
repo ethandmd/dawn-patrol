@@ -6,10 +6,10 @@
 
 ## Usage:
 	
-	1. Install python >= 3.7
-	2. Clone this repository
-	3. ```cd dawn-patrol```
-	4. ```python3 main.py```
+1. Install python >= 3.7
+2. Clone this repository
+```cd dawn-patrol```
+```python3 main.py```
 
 ## The Story:
 
