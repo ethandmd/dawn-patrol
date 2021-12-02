@@ -42,13 +42,14 @@ chuck = Player('Chuck', 'A person named Chuck.', living, 105, 120, 100, 100)
 for i in range(3):
     Item(name='Juanitas', desc='Some tortilla chips by Juanita.', loc=kitchen, maxWt=0, maxCb=0, wt=0.5, cb=1)
 ##Surfing
-surfboard = Item('Waverunner eight-oh', 'A perfect board for riding out the PNW.', basement, 0,0, 4, 80)
+surfboard = Item('longboard', 'A perfect board for riding out the PNW.', basement, 0,0, 4, 80)
 wetsuit = Item('wetsuit', 'A four-three wetsuit, no hood.', basement, 0,0,4,6)
-duffel = Item('duffel bag', 'A 60L containment device for the finer things in life.', guest, 30, 35, wt=1, cb=2)
-truck = Item('The Truck', 'A midsize pick-up with a 6-ft bed.', yard, 250,500,1e5,1e4)
+duffel = Item('duffel', 'A 60L containment device for the finer things in life.', guest, 30, 35, wt=1, cb=2)
+truck = Item('Truck', 'A midsize pick-up with a 6-ft bed.', yard, 250,500,1e5,1e4)
 
 #Controller
 c = Controller(house)
+c.preamble()
 start = datetime.now()
 delta = timedelta(seconds = 300) #reset time for production
 
@@ -57,3 +58,4 @@ while datetime.now() < start + delta:
 
 print("TIME IS UP!!!")
 print("Now for the scoring...")
+c.scoreCard(truck)
