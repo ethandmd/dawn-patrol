@@ -8,8 +8,10 @@
 	
 1. Install python >= 3.7
 2. Clone this repository
-```cd dawn-patrol```
-```python3 main.py```
+
+3. Switch to repo directory: ```$ cd dawn-patrol```
+
+4. Run main game script: ```$ python3 main.py```
 
 ## The Story:
 
