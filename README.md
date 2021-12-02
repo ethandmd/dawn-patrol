@@ -3,7 +3,13 @@
 ## Requirements:
 
 - Python >= 3.7
-- Tkinter (for GUI)
+
+## Usage:
+	
+	1. Install python >= 3.7
+	2. Clone this repository
+	3. ```cd dawn-patrol```
+	4. ```python3 main.py```
 
 ## The Story:
 
