@@ -7,7 +7,7 @@ class Place(GameItem):
         GameItem.__init__(self, name, desc, loc, maxWt, maxCb)
         loc.addPlace(self)
 
-        self.exits = []
+        #self.exits = []
         self.doors = {}
         self.players = []
 
@@ -20,13 +20,14 @@ class Place(GameItem):
         
         msg += "\nDoors:"
         for d in self.doors:
-            msg += f"\n\t{d}"
+            msg += f"\n\tDoor to: {d}"
 
         return msg
 
     def addPlayer(self, player):
         if player not in self.players:
             self.players.append(player)
+            self.loc.addPlayer(player)
             return True
         else:
             return False
@@ -38,12 +39,15 @@ class Place(GameItem):
         else:
             return False
 
-    def addExit(self, loc):
-        self.exits.append(loc)
-        self.doors[loc.name+" door"] = loc
+    def drawEdge(self, loc):
+        #self.exits.append(loc)
+        self.doors[loc.name.lower()] = loc
     
     def connect(self, loc):
-        self.addExit(loc)
-        loc.addExit(self)
+        self.drawEdge(loc)
+        loc.drawEdge(self)
 
         self.loc.addEdge((self,loc))
+
+    def getLoc(self, door):
+        return self.doors[door.lower()]

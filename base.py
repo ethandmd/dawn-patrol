@@ -5,7 +5,10 @@ class World:
     def __init__(self, name):
         self.name = name
         self.places = []
+        self.placeNames = []
         self.edges = []
+        self.players = []
+        self.playerNames = []
 
     def addEdge(self, edge: tuple):
         if edge not in self.edges:
@@ -14,9 +17,38 @@ class World:
     def addPlace(self, place):
         if place not in self.places:
             self.places.append(place)
+            self.placeNames.append(place.name.lower())
             return True
         else:
             return False
+
+    def getPlace(self, name):
+        try:
+            idx = self.placeNames.index(name.lower())
+            return self.places[idx]
+        
+        except ValueError as e:
+            return False
+
+    def addPlayer(self, player):
+        if player not in self.players:
+            self.players.append(player)
+            self.playerNames.append(player.name.lower())
+            return True
+        else:
+            return False
+
+    def getPlayer(self, name):
+        try:
+            idx = self.playerNames.index(name.lower())
+            return self.players[idx]
+
+        except ValueError as e:
+            return False
+
+    def showPlayers(self):
+        for p in self.playerNames:
+            print(p, end=", ")
 
 class GameItem:
 
@@ -48,6 +80,7 @@ class GameItem:
 
     def removeItem(self, item):
         self.inventory.removeItem(item)
+        item.setLocation(self.loc)
 
     def checkItems(self):
         '''For testing purposes only.'''

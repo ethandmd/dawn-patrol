@@ -34,29 +34,35 @@ class Player(GameItem):
         '''Time: seconds'''
         pass
 
-    def move(self, loc):
+    def move(self, door):
         exAmt = self.inventory.wt * 0.1 + 2 #Exertion amount as a function of weight
-        if loc in self.loc.exits:
-            self.setLocation(loc)
-            self.loc.addPlayer(self)
-            self.exert(exAmt)
-            return True
-        else:
-            return False
+        loc = self.loc.getLoc(door)
+        self.setLocation(loc)
+        self.loc.addPlayer(self)
+        self.exert(exAmt)
 
     def takeItem(self,itemName):
         try:
-            item = self.inventory.getItem(itemName)
-        except ValueError as e:
-            return False
-
-        if item in self.loc.inventory:
+            item = self.loc.inventory.getItem(itemName.lower())
             GameItem.addItem(self, item)
             return True
-        else:
+
+        except ValueError as e:
+            print("Unable to find item.")
             return False
 
-    def putItem(self, where, item):
+    def dropItem(self, itemName):
+        try:
+            item = self.loc.inventory.getItem(itemName.lower())
+            GameItem.removeItem(self, item)
+            return True
+        except ValueError as e:
+            print("Unable to find item.")
+            return False
+
+    def putItem(self, where, itemName):
+        where = self.loc.inventory.getItem(where.lower())
+        item = self.inventory.getItem(itemName.lower())
         if where in self.loc.inventory:
             where.addItem(item)
             return True
