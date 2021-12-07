@@ -8,14 +8,14 @@ class Controller:
     MURPHY = random.randint(1,25)
 
     cmds = {
-            "help":"Show help menu",
+            "help":" (Show help menu)",
             "move":"<door> [follow-ons]",
             "pickup":"<object name>",
             "drop":"<object name>",
             "put":"<place name> <object>",
             "order":"<character> <cmd>",
             "status":"Show player status",
-            "inspect":"[character][item][location]"
+            "inspect":"[character][item][room (inspect current location)]"
             }
     
     def __init__(self, world, player=None):
@@ -31,7 +31,7 @@ class Controller:
         print()
         choice = ""
         while choice not in self.world.playerNames:
-            choice = input("Enter player name choice:")
+            choice = input("Enter player name choice:").lower()
         return self.world.getPlayer(choice)
 
     def preamble(self):
@@ -45,15 +45,14 @@ class Controller:
         volume. So, you may need help moving items around the house.
         \n
         At the end of the game, scoring is based on meeting a few conditions:\n
-        \t1. You must have all necessary surf gear\n
+        \t1. You must have all necessary surf gear in the truck.\n
         \t\t (Surfboard, wetsuit, gloves, booties, hood)\n
-        \t2. You must have some kind of food item\n
-        \t3. You must have some kind of beverage\n
-        If you meet the requirments (75 pts), then every additional item in the truck will increase your score.
+        \t2. You must have 25 pts worth of food items in the truck.\n
+        If you meet the requirments, then every additional item in the truck will increase your score.
 
         '''
         print(msg)
-        print(f"Game iteration Murph factor: {self.MURPHY}.")
+        print(f"Murphy's Law constant for this game: {self.MURPHY}.")
         input("Press ENTER to begin game...")
 
     def clear(self):
@@ -81,19 +80,19 @@ class Controller:
             return False
 
     def parser(self, arg):
-        if len(arg) < 1:
-            return
         
         MURPH_LAW = self.murph()
-        print("Murph law prob for this round: {}.".format(MURPH_LAW))
-
+        
+        #try:
         cmd = arg.lower().split()
         prepCmd = cmd[0]
         execCmd = cmd[1:]
+        #except:
+        #    print("Didn't recognize that input.")
 
         if prepCmd == "help":
             self.help()
-            input("Press ENTER to continue...")
+            input("\nPress ENTER to continue...")
                 
         elif prepCmd == "move":
             for frago in execCmd:
@@ -113,8 +112,11 @@ class Controller:
         elif prepCmd == "pickup":
             if len(execCmd) == 1: 
                 execCmd = execCmd[0]
-                self.player.takeItem(execCmd)
-                print("Succesfully picked up {}.".format(execCmd[0]))
+                success = self.player.takeItem(execCmd)
+                if success:
+                    print("Succesfully picked up {}.".format(execCmd))
+                else:
+                    print("Unable to pick up object. Try checking your inventory's weight and cube limits.")
             else:
                 print("Unable to interpret item to pick up.")
             time.sleep(2)
@@ -123,7 +125,7 @@ class Controller:
             if len(execCmd) == 1:
                 execCmd = execCmd[0]
                 self.player.dropItem(execCmd)
-                print("Succesfully dropped {}.".format(execCmd[0]))
+                print("Succesfully dropped {}.".format(execCmd))
             else:
                 print("Unable to interpret item to drop.")
 
@@ -138,10 +140,12 @@ class Controller:
             time.sleep(2)
 
         elif prepCmd == "order":
-            raise NotImplementedError
+            pass
 
         elif prepCmd == "status":
             print(self.player)
+            print("Inventory Weight:",str(self.player.inventory.wt)+"/"+str(self.player.maxWt))
+            print("Inventory Cube:",str(self.player.inventory.cb)+"/"+str(self.player.maxCb))
             print("\nDoors:")
             for d in self.player.loc.doors:
                 print(d)
@@ -150,9 +154,9 @@ class Controller:
         elif prepCmd == "inspect":
             if len(execCmd) == 1:
                 execCmd = execCmd[0]
-                if execCmd == self.player.loc.name: #Location
+                if execCmd == "room": #Location
                     print(self.player.loc)
-                elif execCmd in [p.name for p in self.player.loc.players()]: #Player
+                elif execCmd in [p.name for p in self.player.loc.players]: #Player
                     player = self.world.getPlayer(execCmd)
                     print(player)
                 elif execCmd in self.player.loc.inventory.names: #Location item
@@ -163,9 +167,11 @@ class Controller:
                     print(item)
                 else:
                     print("Unable to find item to inspect.")
-                
-                input("Press ENTER to continue.")
+                print()
+                input("\nPress ENTER to continue.")
             
+            elif execCmd == []:
+                print(self.player.loc)
             else:
                 print("Unable to find item to inspect.")
 
@@ -174,6 +180,7 @@ class Controller:
 
     def prompt(self):
         self.clear()
+        print("Current location:", self.player.loc.desc)
         cmd = input("Enter command: (help to display menu)\n")
         print()
         self.parser(cmd)

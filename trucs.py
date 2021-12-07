@@ -4,7 +4,7 @@ from base import GameItem, Inventory
 class Item(GameItem):
     '''Item base class'''
 
-    def __init__(self, name, desc, loc, maxWt, maxCb, wt, cb):
+    def __init__(self, name, desc, loc, wt, cb, maxWt=0, maxCb=0):
         GameItem.__init__(self, name, desc, loc, maxWt, maxCb)
         self.wt = wt
         self.cb = cb

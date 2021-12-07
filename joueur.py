@@ -53,8 +53,9 @@ class Player(GameItem):
 
     def dropItem(self, itemName):
         try:
-            item = self.loc.inventory.getItem(itemName.lower())
+            item = self.inventory.getItem(itemName.lower())
             GameItem.removeItem(self, item)
+            self.loc.addItem(item)
             return True
         except ValueError as e:
             print("Unable to find item.")

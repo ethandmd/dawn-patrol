@@ -2,8 +2,9 @@ import sqlite3
 
 class World:
     
-    def __init__(self, name):
+    def __init__(self, name, desc):
         self.name = name
+        self.desc = desc
         self.places = []
         self.placeNames = []
         self.edges = []
@@ -59,7 +60,7 @@ class GameItem:
         self.inventory = Inventory([], maxWt, maxCb)
 
     def __str__(self):
-        msg = f"Name: {self.name}\nDescription: {self.desc}\nLocation: {self.loc.name}"
+        msg = f"Name: {self.name}\nDescription: {self.desc}\nLocation: {self.loc.desc}"
         msg += self.inventory.__str__()
 
         return msg
@@ -116,7 +117,7 @@ class Inventory:
             return False
 
     def getItem(self, itemName):
-        idx = self.names.index(itemName.lower())
+        idx = self.names.index(itemName)
         return self.items[idx]
 
     def checkQt(self, itemName): 
@@ -144,6 +145,7 @@ class Inventory:
             self.cb -= item.cb
 
             self.items.remove(item)
+            self.names.remove(item.name.lower())
 
             return True
 
