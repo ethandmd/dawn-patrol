@@ -31,7 +31,7 @@ class Controller:
         print()
         choice = ""
         while choice not in self.world.playerNames:
-            choice = input("Enter player name choice:").lower()
+            choice = input("Enter player name choice: ").lower()
         return self.world.getPlayer(choice)
 
     def preamble(self):
@@ -144,8 +144,8 @@ class Controller:
 
         elif prepCmd == "status":
             print(self.player)
-            print("Inventory Weight:",str(self.player.inventory.wt)+"/"+str(self.player.maxWt))
-            print("Inventory Cube:",str(self.player.inventory.cb)+"/"+str(self.player.maxCb))
+            #print("Inventory Weight:",str(self.player.inventory.wt)+"/"+str(self.player.maxWt))
+            #print("Inventory Cube:",str(self.player.inventory.cb)+"/"+str(self.player.maxCb))
             print("\nDoors:")
             for d in self.player.loc.doors:
                 print(d)

@@ -72,12 +72,12 @@ class GameItem:
             self.loc = loc
 
     def addItem(self, item):
-        self.inventory.addItem(item)
-        if item.loc is self:
-            pass
-        else:
-            item.loc.removeItem(item)
-            item.setLocation(self)
+        if self.inventory.addItem(item):
+            if item.loc is self:
+                pass
+            else:
+                item.loc.removeItem(item)
+                item.setLocation(self)
 
     def removeItem(self, item):
         self.inventory.removeItem(item)

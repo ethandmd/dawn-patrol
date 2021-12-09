@@ -44,8 +44,9 @@ class Player(GameItem):
     def takeItem(self,itemName):
         try:
             item = self.loc.inventory.getItem(itemName.lower())
-            GameItem.addItem(self, item)
-            return True
+            success = GameItem.addItem(self, item)
+            if success:
+                return True
 
         except ValueError as e:
             print("Unable to find item.")
