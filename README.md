@@ -2,17 +2,15 @@
 
 ## Requirements:
 
-- Python >= 3.7
+- Python ```>= 3.7```
 
 ## Run:
 	
-1. Install python >= 3.7
+1. Clone this repository ```$ git clone https://github.com/ethandmd/dawn-patrol.git```
 
-2. Clone this repository ```$ git clone https://github.com/ethandmd/dawn-patrol.git```
+2. Switch to repo directory: ```$ cd dawn-patrol```
 
-3. Switch to repo directory: ```$ cd dawn-patrol```
-
-4. Run main game script: ```$ python3 main.py```
+3. Run main game script: ```$ python3 main.py```
 
 ## Usage Examples:
 ```
