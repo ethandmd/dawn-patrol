@@ -23,7 +23,9 @@ class Config:
                 'move [location name]' : ' (Move to a location)',
                 'order [player name] [command] [command]' : ' (Have an NPC perform {command} with {command}. An NPC order another NPC ...)',
                 'status' : ' (Display player status)',
-                'inspect [name]' : ' (Display object in question)'
+                'inspect [name]' : ' (Display object in question)',
+                'save' : ' (Save current game data)',
+                'quit' : ' (Exit current game)'
                 }
 
     def addEdge(self, a, b):

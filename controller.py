@@ -157,6 +157,9 @@ class Controller:
             else:
                 print("Unable to save current game.")
                 time.sleep(2)
+        
+        elif prep == 'quit':
+            sys.exit('Exiting program...')
 
         else:
             print("Unable to interpret commmand.")
