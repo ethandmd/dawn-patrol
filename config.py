@@ -22,7 +22,8 @@ class Config:
                 'put [item name] [receiving name]' : ' (Put an item into another item)',
                 'move [location name]' : ' (Move to a location)',
                 'order [player name] [command] [command]' : ' (Have an NPC perform {command} with {command}. An NPC order another NPC ...)',
-                'status' : ' (Display player status)'
+                'status' : ' (Display player status)',
+                'inspect [name]' : ' (Display object in question)'
                 }
 
     def addEdge(self, a, b):

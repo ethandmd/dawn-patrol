@@ -10,10 +10,10 @@ controller = Controller(config, Player)
 
 #Places
 kitchen = Vertex(config, 'kitchen', BSTree(), BSTree(), BSTree())
-dining = Vertex(config, 'dining', BSTree(), BSTree(), BSTree())
-living = Vertex(config, 'living', BSTree(), BSTree(), BSTree())
+dining = Vertex(config, 'den', BSTree(), BSTree(), BSTree())
+living = Vertex(config, 'foyer', BSTree(), BSTree(), BSTree())
 master = Vertex(config, 'master', BSTree(), BSTree(), BSTree())
-guest = Vertex(config, 'master', BSTree(), BSTree(), BSTree())
+guest = Vertex(config, 'backroom', BSTree(), BSTree(), BSTree())
 bathroom = Vertex(config, 'bathroom', BSTree(), BSTree(), BSTree())
 hallway = Vertex(config, 'hallway', BSTree(), BSTree(), BSTree())
 stairs = Vertex(config, 'stairs', BSTree(), BSTree(), BSTree())
@@ -57,6 +57,7 @@ delta = timedelta(seconds=300)
 start = datetime.now()
 while datetime.now() < start + delta:
     config.clear()
+    print("Time left:",((start+delta)-datetime.now()))
     arg = input("Enter command: \n")
     player = controller.parser(player, arg)
 

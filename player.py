@@ -69,7 +69,7 @@ class Player:
                 #Check that recipient is an item that can contain other items
                 if recipient.cargo is not None:
                     #Limit item's cargo carrying capacity
-                    if item.wt + recipient.meta['wt'] <= recipient.meta['Wt']+recipient.meta['cb']:
+                    if item.meta['wt'] + recipient.meta['wt'] <= recipient.meta['wt']+recipient.meta['cb']:
                         recipient.cargo.setValue(item.key, item.meta, item.cargo) #Add item to recipient inv
                         return True
         else:
