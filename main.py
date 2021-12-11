@@ -50,16 +50,17 @@ dining.items.setValue('pack', {'wt':5, 'cb':25}, BSTree())
 config.save()
 '''
 #Player
-player = config.loadGame()
+player, timeLeft = config.loadGame() #Load most recent game ckpt, return player and timedelta
 
 #Game Play
-delta = timedelta(seconds=300)
 start = datetime.now()
-while datetime.now() < start + delta:
+while datetime.now() < start + timeLeft:
     config.clear()
-    print("Time left:",((start+delta)-datetime.now()))
-    arg = input("Enter command: \n")
-    key, meta, cargo, loc = controller.parser(player, arg)
-    player = controller.packageTurn(key, meta, cargo, loc)
+    config.updateTime((start+timeLeft)-datetime.now()) #Calculate remaining time
+    #config.updateTime(timeLeft) #Update remaining time in config
+    print("Time left:",(start+timeLeft)-datetime.now()) #Display remaining time (static)
+    arg = input("Enter command: \n") #Take user input
+    key, meta, cargo, loc = controller.parser(player, arg) #Get updated attrs for player
+    player = controller.packageTurn(key, meta, cargo, loc) #Update player attrs in BSTree
 
 print("GAME OVER")

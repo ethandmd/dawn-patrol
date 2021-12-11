@@ -3,7 +3,7 @@ import json
 from base import BSTBuilder, Vertex
 from player import Player
 from item import Item
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Config:
     ckptFP = './.ckpts/'
@@ -15,6 +15,7 @@ class Config:
             os.mkdir(self.ckptFP)
         self.places = []
         self.edges = []
+        self.timeLeft = timedelta(seconds=300)
         self.commands = {
                 'help' : ' (Display game help menu)',
                 'pickup [item name]': ' (Pickup an item)',
@@ -35,6 +36,9 @@ class Config:
         else:
             return False
 
+    def updateTime(self, timeLeft):
+        self.timeLeft = timeLeft
+
     def getVertex(self, out):
         for place in self.places:
             if out == place.name:
@@ -53,7 +57,7 @@ class Config:
             print(k, self.commands[k])
 
     def createCkpt(self):
-        data = {'config':{'edges':self.edges}, 'places':{}}
+        data = {'config':{'edges':self.edges, 'timeLeft':self.timeLeft.seconds}, 'places':{}}
         for place in self.places:
             data['places'].update(place.save())
 
@@ -63,7 +67,7 @@ class Config:
         '''Save game data to json file.'''
         ckpt = self.createCkpt() #Create game ckpt
         s = str(datetime.now()).split('.')[0]
-        t = '-'.join(s.split())
+        t = '_'.join(s.split())
         filename = self.ckptFP + t + '.json' #ckpt file name
         try:
             with open(filename, 'w') as f:
@@ -88,8 +92,9 @@ class Config:
         if flavor == 'vanilla':
             fp = self.vanillaFP
         else:
+            rcntCkpt = sorted(os.listdir(self.ckptFP))[-1]
             #Get most recent ckpt
-            fp = self.ckptFP + sorted(os.listdir(self.ckptFP))[-1] #.remove('game.json')
+            fp = self.ckptFP + rcntCkpt #.remove('game.json')
 
         #Load BSTBuilder
         B = BSTBuilder()
@@ -115,7 +120,11 @@ class Config:
             a,b = self.getVertex(tup[0]), self.getVertex(tup[1])
             a.drawEdge(b)
 
-        return USER
+        #Update time from ckpt
+        timeLeft = timedelta(seconds = data['config']['timeLeft']) 
+        self.updateTime(timeLeft)
+        
+        return USER, self.timeLeft
 
     def createGame(self):
         #Create places
