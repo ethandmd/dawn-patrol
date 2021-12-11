@@ -5,17 +5,10 @@ from config import Config
 class Controller:
     '''Provide game controls for a game player.'''
 
-    def __init__(self, config):
+    def __init__(self, config, PlayerControl):
         self.config = config
-
-    def definePlayer(self, loc, health, stamina, inv):
-        #Set up game character for user
-        
-        name = input("Enter your player name: ").lower()
-        self.player =  Player(name, loc, health, stamina, inv) #Define Player obj
-        key, meta, cargo = self.player.asNode()
-        loc.players.setValue(key, meta, cargo) #Add player obj to loc
-    
+        self.PC = PlayerControl()
+    '''
     def convertToVertex(self, name):
         for place in self.config.places:
             if name == place.name:
@@ -27,21 +20,21 @@ class Controller:
         wt = node.meta['wt']
         cb = node.meta['cb']
         inv = node.cargo
-        return Item(name, wt, cb, inv)
+        return name, wt, cb, inv
+    
+    def nodeFromItem(self, name, wt, cb, inv):
+        '''Take item data and create a node to store.'''
+        key = name
+        meta = {'wt':wt, 'cb':inv}
+        cargo = inv
 
-    def playerFromNode(self, node):
-        '''Take BSTNode data and create a player to interact with.'''
-        name = node.key
-        loc = self.convertToVertex(node.meta['loc'])
-        health = node.meta['health']
-        weight = node.meta['weight']
-        inv = node.cargo
-        return Player(name, health, weight, inv)
+        return key, meta, cargo
+    '''
 
     def parser(self, player, arg):
-        #Check that player is a Player instance
-        if not isinstance(player, Player):
-            return False
+        #Unpack player
+        name, loc, health, stamina, inv = self.PC.playerFromNode(player)
+
         cmd = arg.lower().split() #Split cmd by whitespace
         
         if len(cmd) > 1:
@@ -55,65 +48,78 @@ class Controller:
         if prep == 'help':
             self.config.displayHelp()
             input("\nPress ENTER to continue...")
-            return True
+            return
 
         ##pickup
-        if prep == 'pickup':
+        elif prep == 'pickup':
             exqt = ' '.join(exqt)
             #Find out if an item called exqt exists
-            rawItem = self.getItem(exqt)
-            if rawItem is not None:
-                item = self.itemFromNode(rawItem)
-                return player.takeItem(item)
-        
+            item = loc.items.getValue(exqt)
+            if item is not None: 
+                self.PC.takeItem(loc, inv, item)
+            else:
+                return False
         ##drop
-        if prep == 'drop':
+        elif prep == 'drop':
             exqt = ' '.join(exqt)
             #Find out if an item called exqt exists
-            rawItem = player.inv.getValue(exqt)
-            if rawItem is not None:
-                item = self.itemFromNode(rawItem)
-                return player.dropItem(item) 
-
+            item = player.inv.getValue(exqt)
+            if item is not None:
+                self.PC.dropItem(loc, inv, item)
+            else:
+                return False
         ##put
-        if prep == 'put':
+        elif prep == 'put':
             #Check  exqt1 & exqt2
             try:
                 #Get raw item and recipient
-                rawItem, rawRecipient = player.inv.getValue(exqt[0]), player.loc.items.getValue(exqt[1])
-                item, recipient = self.itemFromNode(rawItem), self.itemFromNode(rawRecipient)
+                item, recipient = inv.getValue(exqt[0]), player.loc.items.getValue(exqt[1])
                 #Put item
-                return player.putItem(item, recipient)
+                self.PC.putItem(loc, inv, item, recipient)
 
             except TypeError as e:
                 print(e)
                 return False
 
         ##move
-        if prep == 'move':
+        elif prep == 'move':
             exqt = ' '.join(exqt)
             #Get new loc
-            newLoc = getattr(player.loc, exqt)
+            newLoc = getattr(loc, exqt)
             if newLoc is not None:
-                return player.move(newLoc)
-
+                player.move(name, loc, stamina, inv, newLoc)
+            else:
+                return False
         ##order
-        if prep == 'order':
+        elif prep == 'order':
             try:
                 #Find player
-                rawPlayer = player.loc.npcs.getValue(exqt[0])
-                if rawPlayer is not None:
-                    player = self.playerFromNode(rawPlayer)
+                sub = loc.npcs.getValue(exqt[0])
+                if sub is not None:
                     newCmd = ' '.join(exqt[1:])
-                    return self.parser(player, newCmd)
+                    self.parser(sub, newCmd)
                 else:
                     return False
+
             except TypeError as e:
                 print(e)
                 return False
 
         ##status
-        if prep == 'status':
-            print(player)
+        elif prep == 'status':
+            print(self.PC.asString(name, loc, health, stamina, inv)
             input("\nPress ENTER to continue...")
-            return True
+            return
+        
+        else:
+            return False
+        
+        #Final step
+        #Update player in BST
+        #If not returns for failures were triggered
+        key, meta, cargo = self.PC.nodeFromPlayer(name, loc, health, stamina, inv)
+        loc.players.setValue(key, meta, cargo)
+
+        return True
+
+
