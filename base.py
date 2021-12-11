@@ -126,10 +126,20 @@ class BSTBuilder:
     def build(self, BSTData):
         buildList = BSTData['BSTree']
 
+<<<<<<< HEAD
         if len(buildList) == 0:
             return BSTree()
         print()
         print(buildList)
+=======
+    def addItem(self, item):
+        if self.inventory.addItem(item):
+            if item.loc is self:
+                pass
+            else:
+                item.loc.removeItem(item)
+                item.setLocation(self)
+>>>>>>> main
 
         def build_from_list(buildList):
             '''
