@@ -79,7 +79,7 @@ class BSTNode:
             if meta is not None:
                 msg = ''
                 for k in meta:
-                    msg += "\n"+k+" "+str(meta[k])
+                    msg += "\n\t"+k+": "+str(meta[k])
                 return msg
             else:
                 return ''
@@ -87,7 +87,7 @@ class BSTNode:
         meta = prettyMeta(self.meta)
         if not isinstance(self.cargo, BSTree):
 
-            return "\nName: " + self.key + "\nStatus:  " + str(meta) + "\nInventory: " + str(self.cargo)
+            return "\nName: " + self.key + "\nAttributes:  " + str(meta) + "\nInventory: " + str(self.cargo)
         else:
             return "\nName: " + self.key + "\nAttributes:  " + str(meta) + "\nInventory: " + str(self.cargo.emesis()["BSTree"])
 

@@ -54,7 +54,13 @@ class Controller:
             #Find out if an item called exqt exists
             item = inv.getValue(exqt)
             if item is not None:
-                self.PC.drop(wt, cb, inv, item)
+                wt -= item.meta['wt']
+                cb -= item.meta['cb']
+                if wt < 0:
+                    wt = 0
+                if cb < 0:
+                    cb = 0
+                inv.removeValue(item.key)
                 loc.items.setValue(item.key, item.meta, item.cargo)
                 print("Successfully dropped", exqt)
                 time.sleep(1)
@@ -69,7 +75,15 @@ class Controller:
                 item, recipient = inv.getValue(exqt[0]), loc.items.getValue(exqt[1])
                 #Put item
                 if self.PC.putItem(loc, inv, item, recipient):
-                    self.PC.drop(wt, cb, inv, item)
+                    #Drop item
+                    wt -= item.meta['wt']
+                    cb -= item.meta['cb']
+                    if wt < 0:
+                        wt = 0
+                    if cb < 0:
+                        cb = 0
+                    inv.removeValue(item.key)
+
                     print("Succesfully put",exqt1,"in",exqt2)
                     time.sleep(1.5)
             except TypeError as e:
@@ -103,7 +117,8 @@ class Controller:
                 sub = loc.npcs.getValue(exqt[0])
                 if sub is not None:
                     newCmd = ' '.join(exqt[1:])
-                    self.parser(sub, newCmd)
+                    key, meta, cargo, nloc = self.parser(sub, newCmd)
+                    loc.npcs.setValue(key, meta, cargo)
                     print("Successfully ordered",sub.key,"to",newCmd)
                     time.sleep(1)
                 else:
@@ -129,7 +144,10 @@ class Controller:
                 print(loc)
                 input("\nPress ENTER to continue...")
             elif exqt in loc.npcs:
-                print(loc.players.getValue(exqt))
+                npc = loc.npcs.getValue(exqt)
+                nname, nloc, nhealth, nstamina, nwt, ncb, nmaxWt, nmaxCb, ninv = self.PC.playerFromNode(npc)
+                nloc = self.convertToVertex(nloc)
+                print(self.PC.asString(nname, nloc, nhealth, nstamina, nwt, ncb, nmaxWt, nmaxCb, ninv))
                 input("\nPress ENTER to continue...")
             else:
                 print("Unable to inspect",exqt)
@@ -153,15 +171,13 @@ class Controller:
         #Final step
         #Update player in BST
         #If not returns for failures were triggered
-        print(wt)
-        input()
         key, meta, cargo = self.PC.nodeFromPlayer(name, loc, health, stamina, wt, cb, maxWt, maxCb, inv)
-        print(meta)
-        input()
-        loc.players.setValue(key, meta, cargo)
-        print(loc.players.getValue(name))
-        input()
+        
+        return key, meta, cargo, loc
 
-        return loc.players.getValue(name) #Return player object for next iteration
+    def packageTurn(self, key, meta, cargo, loc):
+        loc.players.setValue(key, meta, cargo)
+
+        return loc.players.getValue(key) #Return player object for next iteration
 
 

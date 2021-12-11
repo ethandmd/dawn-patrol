@@ -45,20 +45,7 @@ class Player:
                 return True
         else:
             return False
-
-    def drop(self, wt, cb, inv, item):
-        #Adjust cube and weight
-        if wt - item.meta['wt'] <= 0:
-            wt = 0
-        else:
-            wt -= item.meta['wt']
-        if cb - item.meta['cb'] <= 0:
-            cb = 0
-        else:
-            cb -= item.meta['cb']
-
-        inv.removeValue(item.key) #remove item from inv
-            
+    
     def putItem(self, loc, inv, item, recipient):
         '''Put an item from inv into place.inv.'''
 
@@ -82,6 +69,8 @@ class Player:
         msg += "\nStamina: " + str(stamina)
         msg += "\nInventory weight: " + str(wt) + "/" + str(maxWt)
         msg += "\nInventory cube: " + str(cb) + "/" + str(maxCb)
-        msg += "\nInventory:\n " + str(inv)
+        msg += "\nInventory: "
+        for tup in inv.emesis()['BSTree']:
+            msg += "\n\t"+tup[0]
 
         return msg

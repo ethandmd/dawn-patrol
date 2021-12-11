@@ -59,6 +59,7 @@ while datetime.now() < start + delta:
     config.clear()
     print("Time left:",((start+delta)-datetime.now()))
     arg = input("Enter command: \n")
-    player = controller.parser(player, arg)
+    key, meta, cargo, loc = controller.parser(player, arg)
+    player = controller.packageTurn(key, meta, cargo, loc)
 
 print("GAME OVER")
