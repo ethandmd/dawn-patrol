@@ -97,6 +97,7 @@ class Config:
             fp = self.ckptFP + rcntCkpt #.remove('game.json')
 
         #Load BSTBuilder
+        USER = None
         B = BSTBuilder()
         data = self.loadCkptData(fp)
         #Sort ckpt data by place
@@ -123,7 +124,7 @@ class Config:
         #Update time from ckpt
         timeLeft = timedelta(seconds = data['config']['timeLeft']) 
         self.updateTime(timeLeft)
-        
+
         return USER, self.timeLeft
 
     def createGame(self):

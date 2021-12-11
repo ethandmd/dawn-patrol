@@ -84,11 +84,11 @@ class Controller:
                         cb = 0
                     inv.removeValue(item.key)
 
-                    print("Succesfully put",exqt1,"in",exqt2)
+                    print("Succesfully put",item.key,"in",recipient.key)
                     time.sleep(1.5)
             except TypeError as e:
                 print(e)
-                print("Unable to put",exqt1,"in",exqt2)
+                print("Unable to put",item.key,"in",recipient.key)
                 time.sleep(1)
 
         ##move
