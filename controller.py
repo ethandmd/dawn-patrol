@@ -40,6 +40,8 @@ class Controller:
             item = loc.items.getValue(exqt)
             if item is not None: 
                 if self.PC.pickup(wt, cb, maxWt, maxCb, inv, item):
+                    print("PICKUP TRIGGERED")
+                    time.sleep(1)
                     loc.items.removeValue(item.key)
                     print("Successfully picked up",exqt)
                     time.sleep(1)
