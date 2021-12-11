@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 #Config
 config = Config()
 controller = Controller(config, Player)
-
+'''
 #Places
 kitchen = Vertex(config, 'kitchen', BSTree(), BSTree(), BSTree())
 dining = Vertex(config, 'den', BSTree(), BSTree(), BSTree())
@@ -47,8 +47,8 @@ kitchen.items.setValue('jelly', {'wt':2,'cb':1}, None)
 kitchen.items.setValue('apple', {'wt':1,'cb':1}, None)
 dining.items.setValue('pack', {'wt':5, 'cb':25}, BSTree())
 
-#config.save()
-
+config.save()
+'''
 #Player
 player = config.loadGame()
 

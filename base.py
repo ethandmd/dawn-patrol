@@ -22,21 +22,25 @@ class Vertex:
             setattr(vertex, self.name, self)
             if vertex.name not in self.doors:
                 self.doors.append(vertex.name)
-                vertex.doors.append(vertex.name)
+                vertex.doors.append(self.name)
             return
         else:
             return
 
     def __str__(self):
         msg = "Room: " + self.name
+        msg += "\nDoors:"
         for door in self.doors:
-            msg += "\nDoor to " + door
+            msg += "\n\tDoor to " + door
         msg += "\nPlayers:"
-        msg += str(self.players)
+        for tup in self.players.emesis()['BSTree']:
+            msg += "\n\t"+tup[0]
         msg += "\nNPCs:"
-        msg += str(self.npcs)
+        for tup in self.npcs.emesis()['BSTree']:
+            msg += "\n\t"+tup[0]
         msg += "\nItems:"
-        msg += str(self.items)
+        for tup in self.items.emesis()['BSTree']:
+            msg += "\n\t"+tup[0]
         return msg
 
     def isEdge(self, v):

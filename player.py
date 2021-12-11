@@ -38,7 +38,7 @@ class Player:
 
     def pickup(self, wt, cb, maxWt, maxCb, inv, item):
         if wt + item.meta['wt'] <= maxWt:
-            if cb + item.meta['cb'] <= maxCb :
+            if cb + item.meta['cb'] <= maxCb:
                 wt += item.meta['wt']
                 cb += item.meta['cb']
                 inv.setValue(item.key, item.meta, item.cargo)
