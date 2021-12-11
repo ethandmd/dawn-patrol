@@ -9,41 +9,38 @@ class Vertex:
         self.players = players
         self.npcs = npcs
         self.items = items
-        self.outs = []
+        self.doors = []
 
         #Update config
         self.config.addPlace(self)
 
     def drawEdge(self, vertex):
         '''For both vertices, add reference to each other.'''
-        #Check if vertices are already connected
-        #Add ref as attr to self
-        if isinstance(vertex, Vertex):
+        if self.config.addEdge(self.name, vertex.name):
+            #Add ref as attr to self
             setattr(self, vertex.name, vertex)
             setattr(vertex, self.name, self)
-            #This keeps track of which attrs are edges and which are cargo
-            if vertex.name in self.outs:
-                return True
-            else:
-                vertex.outs.append(self.name)
-                self.outs.append(vertex.name)
-                return True
+            if vertex.name not in self.doors:
+                self.doors.append(vertex.name)
+                vertex.doors.append(self.name)
+            return
         else:
-            return False
+            return
 
     def __str__(self):
         msg = "Room: " + self.name
-        msg += "\n"+"-"*25
-        msg += "\nPlayers: " + str(self.players)
-        msg += "\nNPCs: " + str(self.npcs)
-        msg += "\nItems: " + str(self.cargo)
-        msg += "\n" + "-"*25
-        #Get list of all attrs
-        attrs = vars(self)
-        #Pick out the edges
-        for door in self.outs:
-            msg += "\nDoor to: " + attrs[door].name
-
+        msg += "\nDoors:"
+        for door in self.doors:
+            msg += "\n\tDoor to " + door
+        msg += "\nPlayers:"
+        for tup in self.players.emesis()['BSTree']:
+            msg += "\n\t"+tup[0]
+        msg += "\nNPCs:"
+        for tup in self.npcs.emesis()['BSTree']:
+            msg += "\n\t"+tup[0]
+        msg += "\nItems:"
+        for tup in self.items.emesis()['BSTree']:
+            msg += "\n\t"+tup[0]
         return msg
 
     def isEdge(self, v):
@@ -57,8 +54,7 @@ class Vertex:
         return {self.name:{
             'players':self.players.emesis(),
             'npcs':self.npcs.emesis(),
-            'items':self.items.emesis(),
-            'outs':self.outs
+            'items':self.items.emesis()
                 }
             }
 
@@ -78,10 +74,22 @@ class BSTNode:
         self.right = None
 
     def __str__(self): #Fix cargo, meta printer
+        
+        def prettyMeta(meta):
+            if meta is not None:
+                msg = ''
+                for k in meta:
+                    msg += "\n\t"+k+": "+str(meta[k])
+                return msg
+            else:
+                return ''
+
+        meta = prettyMeta(self.meta)
         if not isinstance(self.cargo, BSTree):
-            return "\nName: " + self.key + "\nStatus:  " + str(self.meta) + "\nInventory: " + str(self.cargo)
+
+            return "\nName: " + self.key + "\nAttributes:  " + str(meta) + "\nInventory: " + str(self.cargo)
         else:
-            return "\nName: " + self.key + "\nStatus:  " + str(self.meta) + "\nInventory: " + str(self.cargo.emesis()["BSTree"])
+            return "\nName: " + self.key + "\nAttributes:  " + str(meta) + "\nInventory: " + str(self.cargo.emesis()["BSTree"])
 
     #def __repr__(self):
     #    pass
@@ -90,56 +98,12 @@ class BSTBuilder:
     '''Utility class to construct a BSTree from the output of BSTree.'''
     def __init__(self):
         self.checkIfBST = lambda cargo: "BSTree" in cargo
-    '''
-    def partition(self, someList):
-        smallers = []
-        pivot = someList[len(someList)//2] # pick some value from the list
-        largers = []
-        for x in someList[1:]:
-            if x <= pivot:
-                smallers.append(x)
-            else:
-                largers.append(x)
-        return smallers, pivot, largers
-
-    def quickSort(self, someList):
-        if len(someList) == 0:
-            #Base case when a list is already sorted
-            return []
-        else: #recurse:
-            smaller,pivot,larger = self.partition(someList) #Split list into smaller & larger than pivot
-            smallerSorted = self.quickSort(smaller) #quicksort smaller list
-            largerSorted = self.quickSort(larger) #quicksort larger list
-            return smallerSorted + [pivot] + largerSorted #Combine sorted lists
-
-    def findRoot(self, buildList):
-        Given a list of keys (from a BSTree), find the ideal middle key.
-        keys = [tup[0] for tup in buildList]
-        sortedKeys = self.quickSort(keys) #quicksort
-        print("sortedkeys: ", sortedKeys)
-        n = len(sortedKeys) #get keys length
-        middleKey = sortedKeys[n//2] #Pick middle key out of sorted list
-        out = lambda buildList: [tup for tup in buildList if tup[0] == middleKey][0] #Return desired tuple 
-        
-        return out(buildList)
-    '''
+    
     def build(self, BSTData):
         buildList = BSTData['BSTree']
 
-<<<<<<< HEAD
         if len(buildList) == 0:
             return BSTree()
-        print()
-        print(buildList)
-=======
-    def addItem(self, item):
-        if self.inventory.addItem(item):
-            if item.loc is self:
-                pass
-            else:
-                item.loc.removeItem(item)
-                item.setLocation(self)
->>>>>>> main
 
         def build_from_list(buildList):
             '''
@@ -150,10 +114,6 @@ class BSTBuilder:
             if the cargo is a dictionary with the key 'BSTree'. If so it recurses and creates this nested BSTree.
             '''
             bst = BSTree() #Create empty BSTree wrapper class
-            
-            #Find ideal BSTree root
-            #first = self.findRoot(buildList)
-            #bst.setValue(first[0], first[1], first[2])
 
             #Extract BSTree data from list
             for tup in buildList:
@@ -184,7 +144,7 @@ class BSTree:
         while fast is not None:
             slow = fast
             if key == fast.key:
-                fast.cargo = cargo
+                fast.meta, fast.cargo = meta, cargo
                 return
             elif key < fast.key:
                 fast = fast.left
@@ -264,7 +224,6 @@ class BSTree:
                 prev.right = repl
 
         return curr
-            
 
     def getValue(self, key):
         check = self.root
@@ -304,50 +263,9 @@ class BSTree:
             if start is None:
                 return ''
             else:
-                return traverse(start.left) + str(start) + traverse(start.right)
+                return traverse(start.left) + "\n"+ str(start) + traverse(start.right)
 
         return traverse(self.root)
 
     def __contains__(self, key):
         return self.getValue(key) is not None
-
-
-class Inventory(BSTree):
-    '''
-    Wrapper around a BSTree.
-    
-    Adds weight and cube limits on items.
-    Adds pickup / drop / inspect wrappers methods.
-    '''
-
-    def __init__(self, maxWt, maxCb):
-        BSTree.__init__(self)
-        self.wt = 0
-        self.cb = 0
-        self.maxWt = maxWt
-        self.maxCb = maxCb
-
-    def pickup(self, item):
-        '''Add item to inventory if it meets wt & cube reqs.'''
-        if item.wt + self.wt <= self.maxWt:
-            if item.cb + self.cb <= self.maxCb:
-                #Set item node data
-                key, meta, cargo = item.asNode()
-                BSTree.setValue(self, key, meta, cargo)
-                self.wt += item.wt
-                self.cb += item.cb
-
-                return True
-        else:
-            return False
-
-    def drop(self, item):
-        '''Remove item from inventory.'''
-        if item.name in self:
-            self.wt-= item.wt
-            self.cb -= item.cb
-            BSTree.removeValue(item.name)
-
-    def inspect(self):
-        return str(self)
-

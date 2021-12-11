@@ -1,92 +1,76 @@
+import time
+
 class Player:
+    '''Class to store player methods.'''
 
-    def __init__(self, name, loc, health, stamina, inv):
-        '''inv : BSTree'''
-        self.name = name
-        self.loc = loc
-        self.health = health
-        self.stamina = stamina
-        self.inv = inv
+    def playerFromNode(self, node):
+        '''Take BSTNode data and create a player to interact with.'''
+        name = node.key
+        loc = node.meta['loc']
+        health = node.meta['health']
+        stamina = node.meta['stamina']
+        wt = node.meta['wt']
+        cb = node.meta['cb']
+        maxWt = node.meta['maxWt']
+        maxCb = node.meta['maxCb']
+        inv = node.cargo
+        return name, loc, health, stamina, wt, cb, maxWt, maxCb, inv
 
-    def injure(self, amt):
-        '''Reduce player health by amt. Lower bound of zero.'''
-        if self.health - amt <= 0:
-            self.health = 0
-        else:
-            self.health -= amt
-
-    def exert(self, amt):
-        '''Reduce player stamina by amt. Lower bound of zero.'''
-        if self.stamina - amt <= 0:
-            self.stamina = 0
-        else:
-            self.stamina -= amt
-
-    def asNode(self):
-        '''Method for distilling player info as BSTnode.'''
-        key = self.name
-        meta = {'loc':self.loc.name, 'health':self.health, 'stamina':self.stamina}
-        cargo = self.inv
-
+    def nodeFromPlayer(self, name, loc, health, stamina, wt, cb, maxWt, maxCb, inv):
+        key = name
+        meta = {'loc':loc.name,'health':health,'stamina':stamina, 'wt':wt, 'cb':cb, 'maxWt':maxWt, 'maxCb':maxCb}
+        cargo = inv
         return key, meta, cargo
 
-    def move(self, newLoc):
-        '''Method for moving from one location to another.'''
-        #Check if locations are connected
-        if self.loc.isEdge(newLoc):
-            self.loc.players.removeValue(self.name) #Remove player from current loc
-            self.loc = newLoc #Update location
-            exAmt = self.inv.wt * 0.1 + 2 #Exertion amount
-            self.exert(exAmt) #Exert player
-            self.loc.players.setValue(self.asNode()) #Add player to location
-            return True
+    def injure(self, health, amt):
+        '''Reduce player health by amt. Lower bound of zero.'''
+        if health - amt <= 0:
+            health = 0
         else:
-            return False
-            
+            health -= amt
+        return health
 
-    def takeItem(self, item):
-        '''Method for taking an item from loc and adding to inv.'''
-        #Check that item exists in current location
-        if item.name in self.loc.items:
-            #Check that player can pickup item
-            if self.inv.pickup(item): #Add item to player inv
-                self.loc.items.removeValue(item.name) #Remove item from loc inv
+    def exert(self,stamina, amt):
+        '''Reduce player stamina by amt. Lower bound of zero.'''
+        if stamina - amt <= 0:
+            stamina = 0
+        else:
+            stamina -= amt
+        return stamina
+
+    def pickup(self,wt,cb,maxWt,maxCb,inv,item):
+        if wt + item.meta['wt'] <= maxWt:
+            if cb + item.meta['cb'] <= maxCb:
+                inv.setValue(item.key, item.meta, item.cargo)
                 return True
         else:
             return False
-
-    def dropItem(self, item):
-        '''Method for removing an item from inv and adding it to loc.'''
-        #Check that player has item in inv
-        if itemName in self.inv:
-            self.inv.drop(item) #Remove item from player inv
-            #Set item node data
-            key, meta, cargo = item.asNode()
-            self.loc.items.setValue(key, meta, cargo) #Add item to loc inv
-            return True
-        else:
-            return False
-
-
-    def putItem(self, item, recipient):
+    
+    def putItem(self, loc, inv, item, recipient):
         '''Put an item from inv into place.inv.'''
+
         #Check that item is in player inv
-        if item.name in self.inv:
+        if item.key in inv:
             #Check that recipient is in same location as player
-            if recipient.name in self.loc.items:
+            if recipient.key in loc.items:
                 #Check that recipient is an item that can contain other items
-                if recipient.inv is not None:
-                    self.inv.drop(item) #Remove item from inv
-                    recipient.inv.pickup(item) #Add item to place inv
-                    return True
+                if recipient.cargo is not None:
+                    #Limit item's cargo carrying capacity
+                    if item.meta['wt'] + recipient.meta['wt'] <= recipient.meta['wt']+recipient.meta['cb']:
+                        recipient.cargo.setValue(item.key, item.meta, item.cargo) #Add item to recipient inv
+                        return True
         else:
             return False
 
-    def __str__(self):
-        msg = "Name: " + self.name
-        msg += "\nLocation: " + self.loc.name
-        msg += "\nHealth: " + str(self.health)
-        msg += "\nStamina: " + str(self.stamina)
-        msg += "\nInventory: " + str(self.inv)
+    def asString(self, name, loc, health, stamina, wt, cb, maxWt, maxCb, inv):
+        msg = "Name: " + name
+        msg += "\nLocation: " + loc.name
+        msg += "\nHealth: " + str(health)
+        msg += "\nStamina: " + str(stamina)
+        msg += "\nInventory weight: " + str(wt) + "/" + str(maxWt)
+        msg += "\nInventory cube: " + str(cb) + "/" + str(maxCb)
+        msg += "\nInventory: "
+        for tup in inv.emesis()['BSTree']:
+            msg += "\n\t"+tup[0]
 
         return msg

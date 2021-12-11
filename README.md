@@ -2,16 +2,55 @@
 
 ## Requirements:
 
-- Python >= 3.7
+- Python ```>= 3.7```
 
-## Usage:
+## Run:
 	
-1. Install python >= 3.7
-2. Clone this repository
+1. Clone this repository ```$ git clone https://github.com/ethandmd/dawn-patrol.git```
 
-3. Switch to repo directory: ```$ cd dawn-patrol```
+2. Switch to repo directory: ```$ cd dawn-patrol```
 
-4. Run main game script: ```$ python3 main.py```
+3. Run main game script: ```$ python3 main.py```
+
+## Usage Examples:
+```
+Enter command:
+move foyer
+
+Successfully moved to foyer.
+```
+```
+Enter command:
+help
+
+Commands: 
+help  (Display game help menu)
+pickup [item name]  (Pickup an item)
+drop [item name]  (Drop an item)
+put [item name] [receiving name]  (Put an item into another item)
+move [location name]  (Move to a location)
+order [player name] [command] [command]  (Have an NPC perform {command} with {command}. An NPC order another NPC ...)
+status  (Display player status)
+inspect [name]  (Display object in question)
+save (Save current game data)
+quit (Exit current game)
+
+Press ENTER to continue...
+```
+```
+Enter command:
+pickup pack
+
+Successfully picked up pack.
+```
+```
+Enter command:
+order chuck order larry drop scarf
+
+Successfully dropped scarf
+Successfully ordered larry to drop scarf
+Successfully ordered chuck to order larry drop scarf
+```
 
 ## The Story:
 
