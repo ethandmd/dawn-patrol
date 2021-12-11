@@ -132,7 +132,7 @@ class Controller:
 
         ##status
         elif prep == 'status':
-            print(self.PC.asString(name, loc, health, stamina, inv))
+            print(self.PC.asString(name, loc, health, stamina, wt, cb, maxWt, maxCb, inv))
             input("\nPress ENTER to continue...")
 
         elif prep == 'inspect':

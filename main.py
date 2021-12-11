@@ -47,7 +47,7 @@ kitchen.items.setValue('jelly', {'wt':2,'cb':1}, None)
 kitchen.items.setValue('apple', {'wt':1,'cb':1}, None)
 dining.items.setValue('pack', {'wt':5, 'cb':25}, BSTree())
 
-config.save()
+#config.save()
 
 #Player
 player = config.loadGame()

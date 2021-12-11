@@ -70,10 +70,22 @@ class BSTNode:
         self.right = None
 
     def __str__(self): #Fix cargo, meta printer
+        
+        def prettyMeta(meta):
+            if meta is not None:
+                msg = ''
+                for k in meta:
+                    msg += "\n"+k+" "+str(meta[k])
+                return msg
+            else:
+                return ''
+
+        meta = prettyMeta(self.meta)
         if not isinstance(self.cargo, BSTree):
-            return "\nName: " + self.key + "\nStatus:  " + str(self.meta) + "\nInventory: " + str(self.cargo)
+
+            return "\nName: " + self.key + "\nStatus:  " + str(meta) + "\nInventory: " + str(self.cargo)
         else:
-            return "\nName: " + self.key + "\nStatus:  " + str(self.meta) + "\nInventory: " + str(self.cargo.emesis()["BSTree"])
+            return "\nName: " + self.key + "\nAttributes:  " + str(meta) + "\nInventory: " + str(self.cargo.emesis()["BSTree"])
 
     #def __repr__(self):
     #    pass
@@ -247,7 +259,7 @@ class BSTree:
             if start is None:
                 return ''
             else:
-                return traverse(start.left) + str(start) + traverse(start.right)
+                return traverse(start.left) + "\n"+ str(start) + traverse(start.right)
 
         return traverse(self.root)
 

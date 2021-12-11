@@ -75,11 +75,13 @@ class Player:
         else:
             return False
 
-    def asString(self, name, loc, health, stamina, inv):
+    def asString(self, name, loc, health, stamina, wt, cb, maxWt, maxCb, inv):
         msg = "Name: " + name
         msg += "\nLocation: " + loc.name
         msg += "\nHealth: " + str(health)
         msg += "\nStamina: " + str(stamina)
-        msg += "\nInventory: " + str(inv)
+        msg += "\nInventory weight: " + str(wt) + "/" + str(maxWt)
+        msg += "\nInventory cube: " + str(cb) + "/" + str(maxCb)
+        msg += "\nInventory:\n " + str(inv)
 
         return msg
