@@ -1,6 +1,4 @@
 from base import *
-from player import Player
-from item import Item
 from config import Config
 from controller import Controller
 
@@ -11,9 +9,26 @@ config = Config()
 kitchen = Vertex(config, 'kitchen', BSTree(), BSTree(), BSTree())
 dining = Vertex(config, 'dining', BSTree(), BSTree(), BSTree())
 living = Vertex(config, 'living', BSTree(), BSTree(), BSTree())
+master = Vertex(config, 'master', BSTree(), BSTree(), BSTree())
+guest = Vertex(config, 'master', BSTree(), BSTree(), BSTree())
+bathroom = Vertex(config, 'bathroom', BSTree(), BSTree(), BSTree())
+hallway = Vertex(config, 'hallway', BSTree(), BSTree(), BSTree())
+stairs = Vertex(config, 'stairs', BSTree(), BSTree(), BSTree())
+basement = Vertex(config, 'basement', BSTree(), BSTree(), BSTree())
+frontyard = Vertex(config, 'frontyard', BSTree(), BSTree(), BSTree())
+backyard = Vertex(config, 'backyard', BSTree(), BSTree(), BSTree())
 
+master.drawEdge(hallway)
+guest.drawEdge(hallway)
+bathroom.drawEdge(hallway)
+hallway.drawEdge(dining)
 kitchen.drawEdge(dining)
 dining.drawEdge(living)
+living.drawEdge(frontyard)
+stairs.drawEdge(kitchen)
+backyard.drawEdge(stairs)
+basement.drawEdge(stairs)
+
 
 #NPCs
 larry = Player('larry', living, 100, 100, Inventory(100,100))

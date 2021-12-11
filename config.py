@@ -107,7 +107,7 @@ class Config:
 
     def createGame(self):
         #Create places
-
+        pass
 
 
 
