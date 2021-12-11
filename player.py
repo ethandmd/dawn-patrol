@@ -38,18 +38,14 @@ class Player:
             stamina -= amt
         return stamina
 
-    def pickup(self, wt, cb, maxWt, maxCb, inv, item):
+    def pickup(self,wt,cb,maxWt,maxCb,inv,item):
         if wt + item.meta['wt'] <= maxWt:
             if cb + item.meta['cb'] <= maxCb:
-                print("PICKUP TRIGGERED IN PLAYER CLASS")
-                time.sleep(1)
-                wt += item.meta['wt']
-                cb += item.meta['cb']
                 inv.setValue(item.key, item.meta, item.cargo)
                 return True
         else:
             return False
-    
+
     def drop(self, wt, cb, inv, item):
         #Adjust cube and weight
         if wt - item.meta['wt'] <= 0:

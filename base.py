@@ -144,7 +144,7 @@ class BSTree:
         while fast is not None:
             slow = fast
             if key == fast.key:
-                fast.cargo = cargo
+                fast.meta, fast.cargo = meta, cargo
                 return
             elif key < fast.key:
                 fast = fast.left

@@ -40,8 +40,8 @@ class Controller:
             item = loc.items.getValue(exqt)
             if item is not None: 
                 if self.PC.pickup(wt, cb, maxWt, maxCb, inv, item):
-                    print("PICKUP TRIGGERED")
-                    time.sleep(1)
+                    wt += item.meta['wt']
+                    cb += item.meta['cb']
                     loc.items.removeValue(item.key)
                     print("Successfully picked up",exqt)
                     time.sleep(1)
@@ -153,8 +153,14 @@ class Controller:
         #Final step
         #Update player in BST
         #If not returns for failures were triggered
+        print(wt)
+        input()
         key, meta, cargo = self.PC.nodeFromPlayer(name, loc, health, stamina, wt, cb, maxWt, maxCb, inv)
+        print(meta)
+        input()
         loc.players.setValue(key, meta, cargo)
+        print(loc.players.getValue(name))
+        input()
 
         return loc.players.getValue(name) #Return player object for next iteration
 
