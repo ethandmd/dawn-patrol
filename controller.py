@@ -1,4 +1,5 @@
 import time
+import sys
 
 class Controller:
     '''Provide game controls for a game player.'''
@@ -147,6 +148,14 @@ class Controller:
                 input("\nPress ENTER to continue...")
             else:
                 print("Unable to inspect",exqt)
+                time.sleep(2)
+
+        elif prep == 'save':
+            if self.config.save():
+                print("Successfully saved current game.")
+                time.sleep(2)
+            else:
+                print("Unable to save current game.")
                 time.sleep(2)
 
         else:

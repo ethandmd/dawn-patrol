@@ -6,8 +6,8 @@ from item import Item
 from datetime import datetime
 
 class Config:
-    ckptFP = './ckpts/'
-    vanillaFP = './ckpts/game.json'
+    ckptFP = './.ckpts/'
+    vanillaFP = './.ckpts/game.json'
 
     def __init__(self):
         #Create ckpts dir if not already there
