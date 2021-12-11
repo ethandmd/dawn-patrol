@@ -1,6 +1,6 @@
 import os
 import json
-from base import BSTBuilder, Vertex, Inventory
+from base import BSTBuilder, Vertex
 from player import Player
 from item import Item
 from datetime import datetime
@@ -13,29 +13,36 @@ class Config:
         #Create ckpts dir if not already there
         if not os.path.exists(self.ckptFP):
             os.mkdir(self.ckptFP)
-
         self.places = []
+        self.edges = []
         self.commands = {
                 'help' : ' (Display game help menu)',
                 'pickup [item name]': ' (Pickup an item)',
                 'drop [item name]' : ' (Drop an item)',
                 'put [item name] [receiving name]' : ' (Put an item into another item)',
                 'move [location name]' : ' (Move to a location)',
-                'order [player name] [command] [command]' : ' (Have an NPC perform {command} with {command}. Yes you can have an NPC order another NPC to order another NPC ...)',
+                'order [player name] [command] [command]' : ' (Have an NPC perform {command} with {command}. An NPC order another NPC ...)',
                 'status' : ' (Display player status)'
                 }
 
-    def addItemToPlace(self, item, place):
-        key, meta, cargo = item.asNode()
-        place.items.setValue(key, meta, cargo)
+    def addEdge(self, a, b):
+        if (a,b) not in self.edges:
+            self.edges.append((a,b))
+            return True
+        else:
+            return False
 
-    def addNPCToPlace(self, npc, place):
-        key, meta, cargo = npc.asNode()
-        place.npcs.setValue(key, meta, cargo)
+    def getVertex(self, out):
+        for place in self.places:
+            if out == place.name:
+                return place
 
     def addPlace(self, place):
-        if place not in self.places:
+        if place.name not in self.places:
             self.places.append(place)
+    
+    def clear(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
 
     def displayHelp(self):
         print("Commands: ")
@@ -43,9 +50,9 @@ class Config:
             print(k, self.commands[k])
 
     def createCkpt(self):
-        data = {}
+        data = {'config':{'edges':self.edges}, 'places':{}}
         for place in self.places:
-            data.update(place.save())
+            data['places'].update(place.save())
 
         return {'ckpt':data}
 
@@ -74,7 +81,7 @@ class Config:
         #Default, use most recent ckpt
         return ckpt['ckpt']
 
-    def loadGame(self, flavor):
+    def loadGame(self, flavor=None):
         if flavor == 'vanilla':
             fp = self.vanillaFP
         else:
@@ -85,23 +92,25 @@ class Config:
         B = BSTBuilder()
         data = self.loadCkptData(fp)
         #Sort ckpt data by place
-        for place in data:
-            print("Building ",place, "...")
+        for place in data['places']:
+            print("Building "+place+ "...")
             #Create place
-            rawPlayers = data[place]['players']
+            rawPlayers = data['places'][place]['players']
             players = B.build(rawPlayers)
-            rawNPCs = data[place]['npcs']
+            rawNPCs = data['places'][place]['npcs']
             npcs = B.build(rawNPCs)
-            rawItems = data[place]['items']
+            rawItems = data['places'][place]['items']
             items = B.build(rawItems)
             create = Vertex(self, place, players, npcs, items)
-            #Connect rooms as appropriate
-            for out in data[place]['outs']:
-                create.drawEdge(out)
-
-            #Find player
+            
+            #Find player if applicable
             if players.root is not None:
                 USER = players.root
+
+        #Connect rooms as appropriate
+        for tup in data['config']['edges']:
+            a,b = self.getVertex(tup[0]), self.getVertex(tup[1])
+            a.drawEdge(b)
 
         return USER
 

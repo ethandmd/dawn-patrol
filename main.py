@@ -1,9 +1,12 @@
 from base import *
 from config import Config
 from controller import Controller
+from player import Player
+from datetime import datetime, timedelta
 
 #Config
 config = Config()
+controller = Controller(config, Player)
 
 #Places
 kitchen = Vertex(config, 'kitchen', BSTree(), BSTree(), BSTree())
@@ -30,27 +33,31 @@ backyard.drawEdge(stairs)
 basement.drawEdge(stairs)
 
 
-#NPCs
-larry = Player('larry', living, 100, 100, Inventory(100,100))
-chuck = Player('chuck', living, 100,100, Inventory(100,100))
+#Characters
+linv = BSTree()
+linv.setValue('scarf', {'wt':1, 'cb':1}, None)
+kitchen.npcs.setValue('larry', {'loc':kitchen.name, 'health':100, 'stamina':100, 'wt':0, 'cb':0, 'maxWt':50, 'maxCb':75}, linv)
+kitchen.npcs.setValue('chuck', {'loc':kitchen.name, 'health':100, 'stamina':100, 'wt':0, 'cb':0, 'maxWt':50, 'maxCb':75}, BSTree())
+dining.players.setValue('ethan', {'loc':dining.name, 'health':100, 'stamina':100,'wt':0, 'cb':0, 'maxWt':50, 'maxCb':75}, BSTree())
 
-for p in [larry, chuck]:
-    key, meta, cargo = p.asNode()
-    living.npcs.setValue(key, meta, cargo)
 
 #Items
-chips = Item('chips', 1,2, None)
-jelly = Item('jelly', 2,1, None)
-apple = Item('apple', 1,1, None)
-pack = Item('pack', 5,5, Inventory(50,500))
+kitchen.items.setValue('chips', {'wt':1,'cb':2}, None)
+kitchen.items.setValue('jelly', {'wt':2,'cb':1}, None)
+kitchen.items.setValue('apple', {'wt':1,'cb':1}, None)
+dining.items.setValue('pack', {'wt':5, 'cb':25}, BSTree())
 
-for i in [chips, jelly, apple]:
-    key, meta, cargo = i.asNode()
-    kitchen.items.setValue(key, meta, cargo)
-
-key, meta, cargo = pack.asNode()
-living.items.setValue(key, meta, cargo)
+config.save()
 
 #Player
-control = Controller(config)
-control.definePlayer(kitchen, 100, 100, BSTree())
+player = config.loadGame()
+
+#Game Play
+delta = timedelta(seconds=300)
+start = datetime.now()
+while datetime.now() < start + delta:
+    config.clear()
+    arg = input("Enter command: \n")
+    player = controller.parser(player, arg)
+
+print("GAME OVER")

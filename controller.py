@@ -1,6 +1,4 @@
-from player import Player
-from item import Item
-from config import Config
+import time
 
 class Controller:
     '''Provide game controls for a game player.'''
@@ -8,14 +6,14 @@ class Controller:
     def __init__(self, config, PlayerControl):
         self.config = config
         self.PC = PlayerControl()
-    '''
+    
     def convertToVertex(self, name):
         for place in self.config.places:
             if name == place.name:
                 return place
-
+    '''
     def itemFromNode(self, node):
-        '''Take BSTNode data and create an Item to interact with.'''
+        Take BSTNode data and create an Item to interact with.
         name = node.key
         wt = node.meta['wt']
         cb = node.meta['cb']
@@ -23,7 +21,7 @@ class Controller:
         return name, wt, cb, inv
     
     def nodeFromItem(self, name, wt, cb, inv):
-        '''Take item data and create a node to store.'''
+        Take item data and create a node to store.
         key = name
         meta = {'wt':wt, 'cb':inv}
         cargo = inv
@@ -33,63 +31,79 @@ class Controller:
 
     def parser(self, player, arg):
         #Unpack player
-        name, loc, health, stamina, inv = self.PC.playerFromNode(player)
-
+        name, loc, health, stamina, wt, cb, maxWt, maxCb, inv = self.PC.playerFromNode(player)
+        loc = self.convertToVertex(loc)
+        
         cmd = arg.lower().split() #Split cmd by whitespace
         
-        if len(cmd) > 1:
+        if len(cmd) >= 1:
             prep = cmd[0]
             exqt = cmd[1:]
         else:
-            return False
+            prep = None
 
         #Cases:
         ##help
         if prep == 'help':
             self.config.displayHelp()
             input("\nPress ENTER to continue...")
-            return
 
         ##pickup
         elif prep == 'pickup':
             exqt = ' '.join(exqt)
             #Find out if an item called exqt exists
             item = loc.items.getValue(exqt)
+            print(wt)
             if item is not None: 
-                self.PC.takeItem(loc, inv, item)
+                if self.PC.pickup(wt, cb, maxWt, maxCb, inv, item):
+                    loc.items.removeValue(item.key)
+                    print(wt)
             else:
-                return False
+                print("Unable to pickup",exqt)
+                time.sleep(2)
         ##drop
         elif prep == 'drop':
             exqt = ' '.join(exqt)
             #Find out if an item called exqt exists
-            item = player.inv.getValue(exqt)
+            item = inv.getValue(exqt)
             if item is not None:
-                self.PC.dropItem(loc, inv, item)
+                self.PC.drop(wt, cb, inv, item)
+                loc.items.setValue(item.key, item.meta, item.cargo)
             else:
-                return False
+                print("Unable to drop",exqt)
+                time.sleep(2)
         ##put
         elif prep == 'put':
             #Check  exqt1 & exqt2
             try:
                 #Get raw item and recipient
-                item, recipient = inv.getValue(exqt[0]), player.loc.items.getValue(exqt[1])
+                item, recipient = inv.getValue(exqt[0]), loc.items.getValue(exqt[1])
                 #Put item
-                self.PC.putItem(loc, inv, item, recipient)
+                if self.PC.putItem(loc, inv, item, recipient):
+                    self.PC.drop(wt, cb, inv, item)
 
             except TypeError as e:
                 print(e)
-                return False
+                print("Unable to put",exqt1,"in",exqt2)
+                time.sleep(2)
 
         ##move
         elif prep == 'move':
             exqt = ' '.join(exqt)
             #Get new loc
-            newLoc = getattr(loc, exqt)
+            try:
+                newLoc = getattr(loc, exqt)
+            except AttributeError as e:
+                print(e)
+                newLoc = None
+
             if newLoc is not None:
-                player.move(name, loc, stamina, inv, newLoc)
+                loc.players.removeValue(name) #Remove player from old loc
+                loc = newLoc #Update loc
+                stamina = self.PC.exert(stamina, wt*0.1+2)
             else:
-                return False
+                print("Unable to move to",exqt)
+                time.sleep(2)
         ##order
         elif prep == 'order':
             try:
@@ -99,27 +113,29 @@ class Controller:
                     newCmd = ' '.join(exqt[1:])
                     self.parser(sub, newCmd)
                 else:
-                    return False
+                    print("Unable to order this person")
+                    time.sleep(2)
 
             except TypeError as e:
                 print(e)
-                return False
+                print("Unable to perform order")
+                time.sleep(2)
 
         ##status
         elif prep == 'status':
-            print(self.PC.asString(name, loc, health, stamina, inv)
+            print(self.PC.asString(name, loc, health, stamina, inv))
             input("\nPress ENTER to continue...")
-            return
         
         else:
-            return False
-        
+            print("Unable to interpret commmand.")
+            time.sleep(2)
+    
         #Final step
         #Update player in BST
         #If not returns for failures were triggered
-        key, meta, cargo = self.PC.nodeFromPlayer(name, loc, health, stamina, inv)
+        key, meta, cargo = self.PC.nodeFromPlayer(name, loc, health, stamina, wt, cb, maxWt, maxCb, inv)
         loc.players.setValue(key, meta, cargo)
 
-        return True
+        return loc.players.getValue(name) #Return player object for next iteration
 
 

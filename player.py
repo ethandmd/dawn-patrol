@@ -1,26 +1,26 @@
 class Player:
     '''Class to store player methods.'''
-    def convertToVertex(self, name):
-        for place in self.config.places:
-            if name == place.name:
-                return place
 
     def playerFromNode(self, node):
         '''Take BSTNode data and create a player to interact with.'''
         name = node.key
-        loc = Player.convertToVertex(node.meta['loc'])
+        loc = node.meta['loc']
         health = node.meta['health']
-        weight = node.meta['weight']
+        stamina = node.meta['stamina']
+        wt = node.meta['wt']
+        cb = node.meta['cb']
+        maxWt = node.meta['maxWt']
+        maxCb = node.meta['maxCb']
         inv = node.cargo
-        return name, loc, health, weight, inv
+        return name, loc, health, stamina, wt, cb, maxWt, maxCb, inv
 
-    def nodeFromPlayer(self, name, loc, health, stamina, inv):
+    def nodeFromPlayer(self, name, loc, health, stamina, wt, cb, maxWt, maxCb, inv):
         key = name
-        meta = {'loc':loc.name,'health':health,'stamina':stamina}
+        meta = {'loc':loc.name,'health':health,'stamina':stamina, 'wt':wt, 'cb':cb, 'maxWt':maxWt, 'maxCb':maxCb}
         cargo = inv
         return key, meta, cargo
 
-    def injure(health, amt):
+    def injure(self, health, amt):
         '''Reduce player health by amt. Lower bound of zero.'''
         if health - amt <= 0:
             health = 0
@@ -28,7 +28,7 @@ class Player:
             health -= amt
         return health
 
-    def exert(stamina, amt):
+    def exert(self,stamina, amt):
         '''Reduce player stamina by amt. Lower bound of zero.'''
         if stamina - amt <= 0:
             stamina = 0
@@ -36,57 +36,46 @@ class Player:
             stamina -= amt
         return stamina
 
-    def move(name, loc, stamina, inv, newLoc):
-        '''Method for moving from one location to another.'''
-
-        #Check if locations are connected
-        if loc.isEdge(newLoc):
-            loc.players.removeValue(name) #Remove player from current loc
-            exAmt = inv.wt * 0.1 + 2 #Exertion amount
-            Player.exert(stamina, exAmt) #Exert player
-            return True
-        else:
-            return False
-            
-
-    def takeItem(loc, inv, item):
-        '''Method for taking an item from loc and adding to inv.'''
-
-        #Check that item exists in current location
-        if item.name in loc.items:
-            #Check that player can pickup item
-            if inv.pickup(item): #Add item to player inv
-                loc.items.removeValue(item.name) #Remove item from loc inv
+    def pickup(self, wt, cb, maxWt, maxCb, inv, item):
+        if wt + item.meta['wt'] <= maxWt:
+            if cb + item.meta['cb'] <= maxCb :
+                wt += item.meta['wt']
+                cb += item.meta['cb']
+                inv.setValue(item.key, item.meta, item.cargo)
                 return True
         else:
             return False
-
-    def dropItem(loc, inv, item):
-        '''Method for removing an item from inv and adding it to loc.'''
-        #Check that player has item in inv
-        if inv.drop(item): #Remove item from player inv
-            loc.items.setValue(item.key, item.meta, item.cargo) #Add item to loc inv
-            return True
+    
+    def drop(self, wt, cb, inv, item):
+        #Adjust cube and weight
+        if wt - item.meta['wt'] <= 0:
+            wt = 0
         else:
-            return False
+            wt -= item.meta['wt']
+        if cb - item.meta['cb'] <= 0:
+            cb = 0
+        else:
+            cb -= item.meta['cb']
 
-
-    def putItem(loc, inv, item, recipient):
+        inv.removeValue(item.key) #remove item from inv
+            
+    def putItem(self, loc, inv, item, recipient):
         '''Put an item from inv into place.inv.'''
 
         #Check that item is in player inv
-        if item.name in inv:
+        if item.key in inv:
             #Check that recipient is in same location as player
-            if recipient.name in loc.items:
+            if recipient.key in loc.items:
                 #Check that recipient is an item that can contain other items
                 if recipient.cargo is not None:
-                    inv.drop(item) #Remove item from inv
-                    recipient.cargo.setValue(item.key, item.meta, item.cargo) #Add item to recipient inv
-                    return True
+                    #Limit item's cargo carrying capacity
+                    if item.wt + recipient.meta['wt'] <= recipient.meta['Wt']+recipient.meta['cb']:
+                        recipient.cargo.setValue(item.key, item.meta, item.cargo) #Add item to recipient inv
+                        return True
         else:
             return False
 
-    def asString(name, loc, health, stamina, inv):
+    def asString(self, name, loc, health, stamina, inv):
         msg = "Name: " + name
         msg += "\nLocation: " + loc.name
         msg += "\nHealth: " + str(health)
