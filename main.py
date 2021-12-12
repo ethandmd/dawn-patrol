@@ -32,7 +32,9 @@ controller = Controller(config, Player)
 config.clear()
 print('\033[92;4;1m'"Welcome to The Last Dawn Patrol!"+'\033[0m')
 print()
-choice = input("Would you like to start a new game ([y]/[n])?: ").lower()
+choice = None
+while choice not in ['y','n']:
+    choice = input("Would you like to start a new game ([y]/[n])?: ").lower()
 if choice[0] == 'y':
     loadPreamble()
     #Prep game env
