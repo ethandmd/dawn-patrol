@@ -1,0 +1,21 @@
+SCENARIO:
+
+You and some buddies are die-hard dawn patrollers. Here's the issue, you love a last minute plan and you specialize in staying up late and waking up early.
+That said, here is your objective:
+
+You must load up the truck (in the front yard) to go surfing within five minutes of waking up (in the master bedroom). To go surfing you MUST have at least
+one item in each category:
+
+Surfboards: Either the longboard or shortboard.
+Wearables: Wetsuit (Extra points for booties and a hood).
+Munchables: Pretty much anything that's edible in the kitchen will do.
+
+If you satisfy these three categories then every additional item will add to your score. Failure to satisfy these three categories results in failing the
+game regardless of total items.
+
+Constraints:
+
+Fortunately your gear is conveniently strewn about the house, good luck finding it all. While searching, keep in mind these tips and tricks:
+
+Your buddies Chuck & Larry will (begrudgingly) help you! Order them around using the "order" command.
+Everyone has a finite carrying capacity, you'll have to make multiple trips between the house and the truck.

@@ -2,12 +2,13 @@ import os
 import json
 from base import BSTBuilder, Vertex
 from player import Player
-from item import Item
+from score import ScoreCard
 from datetime import datetime, timedelta
 
 class Config:
     ckptFP = './.ckpts/'
-    vanillaFP = './.ckpts/game.json'
+    vanillaFP = './.ckpts/vanilla.json'
+    preambleFP = '.preamble.txt'
 
     def __init__(self):
         #Create ckpts dir if not already there
@@ -16,6 +17,7 @@ class Config:
         self.places = []
         self.edges = []
         self.timeLeft = timedelta(seconds=300)
+        self.scoreCard = ScoreCard()
         self.commands = {
                 'help' : ' (Display game help menu)',
                 'pickup [item name]': ' (Pickup an item)',
@@ -92,9 +94,9 @@ class Config:
         if flavor == 'vanilla':
             fp = self.vanillaFP
         else:
-            rcntCkpt = sorted(os.listdir(self.ckptFP))[-1]
+            rcntCkpt = sorted(os.listdir(self.ckptFP))[-2]
             #Get most recent ckpt
-            fp = self.ckptFP + rcntCkpt #.remove('game.json')
+            fp = self.ckptFP + rcntCkpt
 
         #Load BSTBuilder
         USER = None
@@ -102,7 +104,6 @@ class Config:
         data = self.loadCkptData(fp)
         #Sort ckpt data by place
         for place in data['places']:
-            print("Building "+place+ "...")
             #Create place
             rawPlayers = data['places'][place]['players']
             players = B.build(rawPlayers)

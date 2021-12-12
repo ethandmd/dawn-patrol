@@ -157,23 +157,7 @@
             },
             "master": {
                 "players": {
-                    "BSTree": [
-                        [
-                            "USERNAME",
-                            {
-                                "loc": "master",
-                                "health": 100,
-                                "stamina": 100,
-                                "wt": 0,
-                                "cb": 0,
-                                "maxWt": 50,
-                                "maxCb": 75
-                            },
-                            {
-                                "BSTree": []
-                            }
-                        ]
-                    ]
+                    "BSTree": []
                 },
                 "npcs": {
                     "BSTree": []
@@ -228,7 +212,7 @@
                             null
                         ],
                         [
-                            "thefish",
+                            "shortboard",
                             {
                                 "wt": 9,
                                 "cb": 30
