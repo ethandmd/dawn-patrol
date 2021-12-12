@@ -23,6 +23,7 @@ class Config:
                 'pickup [item name]': ' (Pickup an item)',
                 'drop [item name]' : ' (Drop an item)',
                 'put [item name] [receiving name]' : ' (Put an item into another item)',
+                'takeout [item name] [giver name]' : ' (Take an item out of another item)',
                 'move [location name]' : ' (Move to a location)',
                 'order [player name] [command] [command]' : ' (Have an NPC perform {command} with {command}. An NPC order another NPC ...)',
                 'status' : ' (Display player status)',

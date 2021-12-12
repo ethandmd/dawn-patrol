@@ -74,7 +74,7 @@ class Controller:
                 #Get raw item and recipient
                 item, recipient = inv.getValue(exqt[0]), loc.items.getValue(exqt[1])
                 #Put item
-                if self.PC.putItem(loc, inv, item, recipient):
+                if self.PC.putItem( item, recipient):
                     #Drop item
                     wt -= item.meta['wt']
                     cb -= item.meta['cb']
@@ -86,11 +86,29 @@ class Controller:
 
                     print("Succesfully put",item.key,"in",recipient.key)
                     time.sleep(1)
-            except TypeError as e:
+                else:
+                    print("Unable to put",item.key,"in",recipient.key)
+                    time.sleep(1)
+
+            except (TypeError, AttributeError) as e:
                 print(e)
                 print("Unable to put",item.key,"in",recipient.key)
                 time.sleep(1)
 
+        ##takeout
+        elif prep == 'takeout':
+            try:
+                #Get giver and item
+                giver = loc.items.getValue(exqt[1])
+                item = giver.cargo.getValue(exqt[0])
+                #Take item from giver
+                loc.items.setValue(item.key, item.meta, item.cargo)
+                giver.cargo.removeValue(item.key)
+                print("Successfully removed",exqt[0],"from",exqt[1])
+                time.sleep(1)
+            except (AttributeError, TypeError) as e:
+                print("Unable to take",exqt[0],"from",exqt[1])
+                time.sleep(1)
         ##move
         elif prep == 'move':
             exqt = ' '.join(exqt)
@@ -113,11 +131,6 @@ class Controller:
             else:
                 print("Unable to move to",exqt)
                 time.sleep(1)
-        
-        ##TakeOut
-        elif prep == 'takeout':
-            pass
-
 
         ##order
         elif prep == 'order':

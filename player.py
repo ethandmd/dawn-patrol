@@ -46,26 +46,16 @@ class Player:
         else:
             return False
     
-    def putItem(self, loc, inv, item, recipient):
+    def putItem(self, item, recipient):
         '''Put an item from inv into place.inv.'''
-
         #Check that item is in player inv
-        try:
-            if item.key in inv:
-                #Check that recipient is in same location as player
-                if recipient.key in loc.items:
-                    #Check that recipient is an item that can contain other items
-                    if recipient.cargo is not None:
-                        #Limit item's cargo carrying capacity
-                        if item.meta['wt'] + recipient.meta['wt'] <= recipient.meta['wt']+recipient.meta['cb']:
-                            recipient.cargo.setValue(item.key, item.meta, item.cargo) #Add item to recipient inv
-                            return True
-            else:
-                return False
-
-        except AttributeError as e:
-            print("Unable to carry out command")
-            time.sleep(1)
+        #Check that recipient is an item that can contain other items
+        if recipient.cargo is not None:
+        #Limit item's cargo carrying capacity
+            if item.meta['wt'] + recipient.meta['wt'] <= recipient.meta['wt']+recipient.meta['cb']:
+                recipient.cargo.setValue(item.key, item.meta, item.cargo) #Add item to recipient inv
+                return True
+        else:
             return False
 
     def asString(self, name, loc, health, stamina, wt, cb, maxWt, maxCb, inv):
