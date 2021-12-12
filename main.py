@@ -30,8 +30,8 @@ controller = Controller(config, Player)
 #Pre-Game menu:
 ###############
 config.clear()
+print('\033[92;4;1m'"Welcome to The Last Dawn Patrol!"+'\033[0m')
 print()
-print("Welcome to The Last Dawn Patrol...")
 choice = input("Would you like to start a new game ([y]/[n])?: ").lower()
 if choice[0] == 'y':
     loadPreamble()
@@ -62,10 +62,11 @@ start = datetime.now()
 gameon = True
 
 while gameon:
-    print('THE LAST DAWN PATROL')
     config.clear()
+    print('THE LAST DAWN PATROL')
     config.updateTime((start+timeLeft)-datetime.now()) #Calculate remaining time
-    
+    config.displayHelp()
+    print()
     if datetime.now() <= start + timeLeft:
         print("Time left:",(start+timeLeft)-datetime.now())
         arg = input("Enter command: \n") #Take user input
