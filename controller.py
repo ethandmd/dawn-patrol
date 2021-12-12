@@ -85,7 +85,7 @@ class Controller:
                     inv.removeValue(item.key)
 
                     print("Succesfully put",item.key,"in",recipient.key)
-                    time.sleep(1.5)
+                    time.sleep(1)
             except TypeError as e:
                 print(e)
                 print("Unable to put",item.key,"in",recipient.key)
@@ -102,14 +102,23 @@ class Controller:
                 newLoc = None
 
             if newLoc is not None:
-                loc.players.removeValue(name) #Remove player from old loc
+                if name in ['chuck','larry']: #Check for NPC ##Temp solution
+                    loc.npcs.removeValue(name)
+                else:
+                    loc.players.removeValue(name) #Remove player from old loc
                 loc = newLoc #Update loc
                 stamina = self.PC.exert(stamina, wt*0.1+2)
                 print("Successfully moved to",loc.name)
-                time.sleep(2)
+                time.sleep(1)
             else:
                 print("Unable to move to",exqt)
                 time.sleep(1)
+        
+        ##TakeOut
+        elif prep == 'takeout':
+            pass
+
+
         ##order
         elif prep == 'order':
             try:
@@ -117,15 +126,18 @@ class Controller:
                 sub = loc.npcs.getValue(exqt[0])
                 if sub is not None:
                     newCmd = ' '.join(exqt[1:])
-                    key, meta, cargo, nloc = self.parser(sub, newCmd)
-                    loc.npcs.setValue(key, meta, cargo)
+                    
+                    #Run command input system on NPC
+                    nkey, nmeta, ncargo, nloc = self.parser(sub, newCmd)
+                    self.packageTurn(nkey, nmeta, ncargo, nloc)
+
                     print("Successfully ordered",sub.key,"to",newCmd)
                     time.sleep(1)
                 else:
                     print("Unable to order this person")
                     time.sleep(1)
 
-            except TypeError as e:
+            except (TypeError, AttributeError) as e:
                 print(e)
                 print("Unable to perform order")
                 time.sleep(1)
@@ -151,7 +163,7 @@ class Controller:
                 input("\nPress ENTER to continue...")
             else:
                 print("Unable to inspect",exqt)
-                time.sleep(2)
+                time.sleep(1)
 
         elif prep == 'save':
             if self.config.save():
@@ -176,8 +188,12 @@ class Controller:
         return key, meta, cargo, loc
 
     def packageTurn(self, key, meta, cargo, loc):
-        loc.players.setValue(key, meta, cargo)
-
-        return loc.players.getValue(key) #Return player object for next iteration
+        #Check for NPC ##Temp solution
+        if key in ['chuck','larry']:
+            loc.npcs.setValue(key,meta,cargo)
+            return
+        else:
+            loc.players.setValue(key, meta, cargo)
+            return loc.players.getValue(key) #Return player object for next iteration
 
 

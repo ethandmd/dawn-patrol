@@ -32,10 +32,10 @@ class Vertex:
         msg += "\nDoors:"
         for door in self.doors:
             msg += "\n\tDoor to " + door
-        msg += "\nPlayers:"
+        msg += "\nPlayer(s):"
         for tup in self.players.emesis()['BSTree']:
             msg += "\n\t"+tup[0]
-        msg += "\nNPCs:"
+        msg += "\nNon-Playable Characters:"
         for tup in self.npcs.emesis()['BSTree']:
             msg += "\n\t"+tup[0]
         msg += "\nItems:"
@@ -53,7 +53,7 @@ class Vertex:
     def save(self):
         return {self.name:{
             'players':self.players.emesis(),
-            'npcs':self.npcs.emesis(),
+            'npcs': self.npcs.emesis(),
             'items':self.items.emesis()
                 }
             }
