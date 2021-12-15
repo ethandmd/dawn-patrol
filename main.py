@@ -91,7 +91,6 @@ if __name__ == "__main__":
                 time.sleep(secs)
                 player.meta['stamina'] += secs
             else:
-
                 arg = input("Enter command: \n") #Take user input
                 key, meta, cargo, loc = controller.parser(player, arg) #Get updated attrs for player
                 player = controller.packageTurn(key, meta, cargo, loc) #Update player attrs in BSTree

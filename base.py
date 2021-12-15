@@ -90,9 +90,6 @@ class BSTNode:
         else:
             msg = "Name: " + self.key + " | Inventory:"
             msg += str(self.cargo)
-            #items =  self.cargo.emesis()['BSTree']
-            #for i in items:
-            #    msg += "\n\t\t" + i[0]
             return msg
 
 class BSTBuilder:
@@ -227,6 +224,7 @@ class BSTree:
         return curr
 
     def getValue(self, key):
+        '''Given a key: str, return the corresponding node.'''
         check = self.root
         while check is not None:
             if key == check.key:
@@ -270,6 +268,7 @@ class BSTree:
         return {'BSTree':asList(self.root)}
 
     def isEmpty(self):
+        '''Check emptiness by virtue of tree root.'''
         return self.root is None
     
     def __str__(self):

@@ -1,16 +1,17 @@
-class MasterMap:
-    top = "     "+"-"*10
-    sides = "\n|"+" "*13+"|"
-    bottom = "\n"+"-"*15
+class Map:
 
-    def display(self, occ=None):
-        if occ:
-            return self.top + self.sides*2 + "\n|"+" "*4+"(you)"+" "*4+"|" + self.sides*2 + "\n|" + " "*4+"master"+" "*3 + "|" + self.sides + self.bottom
-        else:
-            return self.top + self.sides*4 +"\n|" + " "*4 + "master" + " "*3 + "|" + self.sides + self.bottom
+    top = ' '*10 + 'backyard'
+    btop = '\n              |'
+    mtop = "\n   kitchen -- stairs -- basement"
+    tm = "\n     |"
+    m = "\n     |        office"
+    mm = "\n     |         |"
+    mmm = "\n     |         |"
+    middle = "\n   foyer -- hallway -- bathroom"
+    b = "\n     |         |"
+    bb = "\n     |       master"
+    bottom = "\n   frontyard"
 
-class HallwayMap:
-    top = " "*4+"-"
-    topSide = "|"+" "*5
-    pass
+    def __str__(self):
+        return self.top+self.btop+self.mtop+self.tm+self.m+self.mm+self.mmm+self.middle+self.b+self.bb+self.bottom
 

@@ -9,11 +9,13 @@ class Controller:
         self.PC = PlayerControl()
     
     def convertToVertex(self, name):
+        '''Take a location string and return node in 'world' graph.'''
         for place in self.config.places:
             if name == place.name:
                 return place
 
     def welfareCheck(self, player):
+        '''Check player's health and stamina.'''
         if player.meta['health'] <= 0:
             return 'health'
         elif player.meta['stamina'] <= 0:
@@ -22,6 +24,7 @@ class Controller:
             return 
 
     def parser(self, player, arg):
+        '''Essential utility function for taking user input and translating it to game actions.'''
         print()
         #Unpack player
         name, loc, health, stamina, wt, cb, maxWt, maxCb, inv = self.PC.playerFromNode(player)
@@ -213,6 +216,7 @@ class Controller:
         return key, meta, cargo, loc
 
     def packageTurn(self, key, meta, cargo, loc):
+        '''Upate player in game 'world' so that game can be saved at any point.'''
         #Check for NPC ##Temp solution
         if key in ['chuck','larry']:
             loc.npcs.setValue(key,meta,cargo)

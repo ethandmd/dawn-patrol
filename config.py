@@ -1,12 +1,17 @@
 import os
 import time
 import json
+from maps import Map
 from base import BSTBuilder, Vertex
 from player import Player
 from score import ScoreCard
 from datetime import datetime, timedelta
 
 class Config:
+    '''
+    Class for generic utility functions associated with game operations.
+    '''
+
     ckptFP = './.ckpts/'
     vanillaFP = './.ckpts/vanilla.json'
     preambleFP = '.preamble.txt'
@@ -15,6 +20,7 @@ class Config:
         #Create ckpts dir if not already there
         if not os.path.exists(self.ckptFP):
             os.mkdir(self.ckptFP)
+        self.map = Map()
         self.places = []
         self.edges = []
         self.timeLeft = timedelta(seconds=300)
@@ -34,6 +40,8 @@ class Config:
                 }
 
     def gameChoice(self):
+        '''Interactive pre-game menu.'''
+
         choice = None
         while choice is None:
             choice = input("Would you like to start a new game ([y]es / [n]o): ").lower()
@@ -46,6 +54,8 @@ class Config:
                 choice = None
 
     def getRestTime(self):
+        '''Get a real valued number between 0-100.'''
+
         secs = None
         while secs is None:
             try:
@@ -68,26 +78,34 @@ class Config:
             return False
 
     def updateTime(self, timeLeft):
+        '''Utility function for save game feature. Ensures saved checkpoint has appropriate time left.'''
         self.timeLeft = timeLeft
 
     def getVertex(self, out):
+        '''Retrieve a node in the 'world' graph.'''
         for place in self.places:
             if out == place.name:
                 return place
 
     def addPlace(self, place):
+        '''Have config class track a new node in the 'world' graph.'''
         if place.name not in self.places:
             self.places.append(place)
     
     def clear(self):
+        '''Clear console screen.'''
         os.system('cls' if os.name == 'nt' else 'clear')
 
     def displayHelp(self):
+        '''Display game commands and options.'''
         print("Commands: ")
         for k in self.commands:
             print(k, self.commands[k])
+        print("Map:")
+        print(self.map)
 
     def createCkpt(self):
+        '''Store current game data as a python dict.'''
         data = {'config':{'edges':self.edges, 'timeLeft':self.timeLeft.seconds}, 'places':{}}
         for place in self.places:
             data['places'].update(place.save())
@@ -111,15 +129,16 @@ class Config:
             return False
 
     def loadCkptData(self, fp):
+        '''Read data from json file.'''
         #load ckpt
         with open(fp, 'r') as f:
             ckpt = json.load(f)
 
-        #ckpt = ckpt['ckpt']
-        #Default, use most recent ckpt
         return ckpt['ckpt']
 
     def loadGame(self, flavor=None):
+        '''Load json data and read values into a game.'''
+
         if flavor == 'vanilla':
             fp = self.vanillaFP
         else:
@@ -164,7 +183,7 @@ class Config:
         return USER, self.timeLeft
 
     def createGame(self):
-        #Create places
+        '''Create starting 'vanilla' game checkpoint.'''
         pass
 
 
