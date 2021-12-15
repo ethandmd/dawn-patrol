@@ -13,6 +13,17 @@ class Controller:
             if name == place.name:
                 return place
     
+    def prettyPrintItem(self, item):
+        print("Name:", item.key)
+        print("\nAttributes:")
+        for a in item.meta:
+            print(a,":",item.meta[a])
+        print("\nInventory:")
+        if item.cargo is not None:
+            #for c in item.cargo.emesis()['BSTree']:
+            #    print(c)
+            print(item.cargo)
+
     def parser(self, player, arg):
         print()
         #Unpack player
@@ -74,7 +85,7 @@ class Controller:
                 #Get raw item and recipient
                 item, recipient = inv.getValue(exqt[0]), loc.items.getValue(exqt[1])
                 #Put item
-                if self.PC.putItem( item, recipient):
+                if self.PC.putItem(item, recipient):
                     #Drop item
                     wt -= item.meta['wt']
                     cb -= item.meta['cb']
@@ -90,9 +101,9 @@ class Controller:
                     print("Unable to put",item.key,"in",recipient.key)
                     time.sleep(1)
 
-            except (TypeError, AttributeError) as e:
+            except (TypeError, AttributeError, IndexError) as e:
                 print(e)
-                print("Unable to put",item.key,"in",recipient.key)
+                print("Unable to process 'put' command.")
                 time.sleep(1)
 
         ##takeout
@@ -106,7 +117,8 @@ class Controller:
                 giver.cargo.removeValue(item.key)
                 print("Successfully removed",exqt[0],"from",exqt[1])
                 time.sleep(1)
-            except (AttributeError, TypeError) as e:
+            except (AttributeError, TypeError, IndexError) as e:
+                print(e)
                 print("Unable to take",exqt[0],"from",exqt[1])
                 time.sleep(1)
         ##move
@@ -150,9 +162,9 @@ class Controller:
                     print("Unable to order this person")
                     time.sleep(1)
 
-            except (TypeError, AttributeError) as e:
-                print(e)
-                print("Unable to perform order")
+            except (TypeError, AttributeError, IndexError) as e:
+                #print(e)
+                print("Unable to perform order command.")
                 time.sleep(1)
 
         ##status
@@ -163,7 +175,9 @@ class Controller:
         elif prep == 'inspect':
             exqt = ' '.join(exqt)
             if exqt in loc.items:
-                print(loc.items.getValue(exqt))
+                item = loc.items.getValue(exqt)
+                #self.prettyPrintItem(item)
+                print(item)
                 input("\nPress ENTER to continue...")
             elif exqt == 'room':
                 print(loc)

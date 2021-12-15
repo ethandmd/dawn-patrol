@@ -29,13 +29,13 @@ controller = Controller(config, Player)
 ##############
 #Pre-Game menu:
 ###############
+
 config.clear()
 print('\033[92;4;1m'"Welcome to The Last Dawn Patrol!"+'\033[0m')
 print()
-choice = None
-while choice not in ['y','n']:
-    choice = input("Would you like to start a new game ([y]/[n])?: ").lower()
-if choice[0] == 'y':
+choice = config.gameChoice()
+
+if choice == 'newGame':
     loadPreamble()
     #Prep game env
     player, timeLeft = config.loadGame('vanilla') #Load vanilla game, return player and timedelta
@@ -81,4 +81,9 @@ while gameon:
 #promptThread.run()
 
 print('\033[91m'+"Time is up!"+'\033[0m')
-config.scoreCard(player.key, player.cargo) #Calculate score
+frontyard = config.getVertex('frontyard')#Get truck for score calculation
+truck = frontyard.items.getValue('truck')
+config.scoreCard.giveScore(player.key, truck.cargo) #Calculate score
+
+print("Current Leaderboard:")
+config.scoreCard.viewLeaderboard()

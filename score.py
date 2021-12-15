@@ -16,7 +16,7 @@ class ScoreCard:
             ('solarcharger',7),
             ('puffyjacket', 7),
             ('woolsocks', 9),
-            ('shorboard',21),
+            ('shortboard',21),
             ('longboard',25),
             ('wallet', 5),
             ('hoodedtowel', 10),
@@ -29,7 +29,8 @@ class ScoreCard:
             ('snowboard',0),
             ('ripcurlsuit',25),
             ('sitka',50),
-            ('trailwagon',15)
+            ('trailwagon',15),
+            ('20dollars',5)
             ]
 
 
@@ -44,27 +45,23 @@ class ScoreCard:
             pass
 
     def parseInventory(self, inv):
-        '''Retrieve the name of each item in the jackpot.'''
-        keys = []
-        for tup in inv.emesis()['BSTree']:
-            if tup[2] is not None: #Check if an item had nested items
-                for ntup in tup[0]:
-                    keys.append(ntup[0])
-                else:
-                    keys.append(tup[0])
+        '''
+        Retrieve the name of each item in the jackpot.
+        '''
+        return inv.keys()
 
-        return keys
-
-    def viewHighSCore(self):
+    def viewLeaderboard(self):
         try:
             conn = sqlite3.connect(self.pointDB)
             cur = conn.cursor()
 
             cur.execute("SELECT * FROM scores ORDER BY points")
-            res = cur.fetchone()
-            print("Highest score:")
-            for i in res:
-                print(i, end=" ")
+            res = cur.fetchall()
+            for row in res:
+                print("Username:", res[0], end=", ")
+                print("Item Count:",res[1], end=", ")
+                print("Score:",res[2])
+                
         except sqlite3.Error as e:
             print(e)
             return False
@@ -81,7 +78,8 @@ class ScoreCard:
                 cur.execute('SELECT points FROM pointlookup WHERE name = (?)',(key,))
                 res = cur.fetchone()
                 pointLookup[key] = res[0]
-                conn.close()
+            
+            conn.close()
 
             return pointLookup
 
@@ -111,10 +109,10 @@ class ScoreCard:
     def calculateScore(self, pointLookup):
         #Needed surf gear to win: 
         if self.boards[0] in pointLookup or self.boards[1] in pointLookup: #Check for a surfboard
-            if self.wear in pointLookup:
-                if self.food[0] in pointLookup or self.food[1] in pointLookup or self.food[2] in pointLookup or self.food[3] in pointLookup:
+            if self.wear in pointLookup: #Check for wetsuit
+                if self.food[0] in pointLookup or self.food[1] in pointLookup or self.food[2] in pointLookup or self.food[3] in pointLookup: #Check for food item
                     points = sum(list(pointLookup.values()))
-
+                    
                     return points
 
     def writeScore(self, username, numItems, points):
@@ -135,15 +133,17 @@ class ScoreCard:
             return False
 
 
-    def __call__(self, username, inv):
+    def giveScore(self, username, inv):
         
         keys = self.parseInventory(inv)
         pointLookup = self.retrievePoints(keys)
         score = self.calculateScore(pointLookup)
         if score is not None:
             self.writeScore(username, len(keys), score)
-        print("Your score is",score)
-
-        return
+            print("Your score is",score)
+        
+        else:
+            print("Your score is 0.")
+        
 
 

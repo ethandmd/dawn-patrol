@@ -73,7 +73,7 @@ class BSTNode:
         self.left = None
         self.right = None
 
-    def __str__(self): #Fix cargo, meta printer
+    def __str__(self):
         
         def prettyMeta(meta):
             if meta is not None:
@@ -85,14 +85,15 @@ class BSTNode:
                 return ''
 
         meta = prettyMeta(self.meta)
-        if not isinstance(self.cargo, BSTree):
-
-            return "\nName: " + self.key + "\nAttributes:  " + str(meta) + "\nInventory: " + str(self.cargo)
+        if self.cargo is None:
+            return "\nName: " + self.key + "\n"# + "\nAttributes:  " + str(meta) + "\nInventory: " + "(None)"
         else:
-            return "\nName: " + self.key + "\nAttributes:  " + str(meta) + "\nInventory: " + str(self.cargo.emesis()["BSTree"])
-
-    #def __repr__(self):
-    #    pass
+            msg = "Name: " + self.key + " | Inventory:"
+            msg += str(self.cargo)
+            #items =  self.cargo.emesis()['BSTree']
+            #for i in items:
+            #    msg += "\n\t\t" + i[0]
+            return msg
 
 class BSTBuilder:
     '''Utility class to construct a BSTree from the output of BSTree.'''
@@ -236,6 +237,20 @@ class BSTree:
                 check = check.right
         return None
 
+    
+    def keys(self):
+        '''Return list of keys from each node in tree. Including nested nodes' cargo.'''
+
+        def subtreeKeys(start):
+            if start is None:
+                return []
+            elif start.cargo is not None:
+                return subtreeKeys(start.left) + [start.key] + subtreeKeys(start.cargo.root) + subtreeKeys(start.right)
+            else:
+                return subtreeKeys(start.left) + [start.key] + subtreeKeys(start.right)
+
+        return subtreeKeys(self.root)
+
     def emesis(self):
         '''Regurgitate BSTree contents into:
             {'BSTRee':[...]}.
@@ -258,13 +273,13 @@ class BSTree:
         return self.root is None
     
     def __str__(self):
-        
+
         def traverse(start):
             if start is None:
                 return ''
             else:
-                return traverse(start.left) + "\n"+ str(start) + traverse(start.right)
-
+                return traverse(start.left) + str(start) + traverse(start.right)
+        
         return traverse(self.root)
 
     def __contains__(self, key):

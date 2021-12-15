@@ -1,4 +1,5 @@
 import os
+import time
 import json
 from base import BSTBuilder, Vertex
 from player import Player
@@ -25,12 +26,24 @@ class Config:
                 'put [item name] [receiving name]' : ' (Put an item into another item)',
                 'takeout [item name] [giver name]' : ' (Take an item out of another item)',
                 'move [location name]' : ' (Move to a location)',
-                'order [player name] [command] [command]' : ' (Have an NPC perform {command} with {command}. An NPC order another NPC ...)',
+                'order [player name] [command] {command}' : ' (Have an NPC perform {command} with {command}. An NPC order another NPC ...)',
                 'status' : ' (Display player status)',
-                'inspect [name]' : ' (Display object in question)',
+                'inspect [name]' : ' (Display object, enter "room" to inspect current room)',
                 'save' : ' (Save current game data)',
                 'quit' : ' (Exit current game)'
                 }
+
+    def gameChoice(self):
+        choice = None
+        while choice is None:
+            choice = input("Would you like to start a new game ([y]es / [n]o): ").lower()
+            
+            if choice == '' or choice[0] == 'y':
+                return 'newGame'
+            elif choice[0] == 'n':
+                return 'loadGame'
+            else:
+                choice = None
 
     def addEdge(self, a, b):
         if (a,b) not in self.edges:
@@ -95,9 +108,15 @@ class Config:
         if flavor == 'vanilla':
             fp = self.vanillaFP
         else:
-            rcntCkpt = sorted(os.listdir(self.ckptFP))[-2]
-            #Get most recent ckpt
-            fp = self.ckptFP + rcntCkpt
+            try:
+                #Get most recent ckpt
+                rcntCkpt = sorted(os.listdir(self.ckptFP))[-2]
+                fp = self.ckptFP + rcntCkpt
+            except IndexError as e:
+                print("No saved checkpoints to load!")
+                print("Loading new game...")
+                time.sleep(1)
+                fp = self.vanillaFP
 
         #Load BSTBuilder
         USER = None
