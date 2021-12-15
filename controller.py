@@ -12,17 +12,14 @@ class Controller:
         for place in self.config.places:
             if name == place.name:
                 return place
-    
-    def prettyPrintItem(self, item):
-        print("Name:", item.key)
-        print("\nAttributes:")
-        for a in item.meta:
-            print(a,":",item.meta[a])
-        print("\nInventory:")
-        if item.cargo is not None:
-            #for c in item.cargo.emesis()['BSTree']:
-            #    print(c)
-            print(item.cargo)
+
+    def welfareCheck(self, player):
+        if player.meta['health'] <= 0:
+            return 'health'
+        elif player.meta['stamina'] <= 0:
+            return 'stamina'
+        else:
+            return 
 
     def parser(self, player, arg):
         print()
@@ -56,6 +53,8 @@ class Controller:
                     loc.items.removeValue(item.key)
                     print("Successfully picked up",exqt)
                     time.sleep(1)
+                else:
+                    print("Unable to pickup",exqt,"check your inventory weight and cube limits.")
             else:
                 print("Unable to pickup",exqt)
                 time.sleep(1)
@@ -176,7 +175,6 @@ class Controller:
             exqt = ' '.join(exqt)
             if exqt in loc.items:
                 item = loc.items.getValue(exqt)
-                #self.prettyPrintItem(item)
                 print(item)
                 input("\nPress ENTER to continue...")
             elif exqt == 'room':

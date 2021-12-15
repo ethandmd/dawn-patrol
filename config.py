@@ -45,6 +45,21 @@ class Config:
             else:
                 choice = None
 
+    def getRestTime(self):
+        secs = None
+        while secs is None:
+            try:
+                secs = int(input("Enter seconds to rest: "))
+                if secs < 0:
+                    return 0
+                elif secs > 100:
+                    return 100
+                else:
+                    return secs
+
+            except ValueError as e:
+                secs = None
+
     def addEdge(self, a, b):
         if (a,b) not in self.edges:
             self.edges.append((a,b))
