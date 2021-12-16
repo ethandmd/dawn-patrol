@@ -125,7 +125,7 @@ class Config:
             return True
 
         except TypeError as e:
-            print(e)
+            #print(e)
             return False
 
     def loadCkptData(self, fp):
@@ -147,6 +147,7 @@ class Config:
                 rcntCkpt = sorted(os.listdir(self.ckptFP))[-2]
                 fp = self.ckptFP + rcntCkpt
             except IndexError as e:
+                #print(e)
                 print("No saved checkpoints to load!")
                 print("Loading new game...")
                 time.sleep(1)

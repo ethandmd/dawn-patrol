@@ -104,7 +104,7 @@ class Controller:
                     time.sleep(1)
 
             except (TypeError, AttributeError, IndexError) as e:
-                print(e)
+                #print(e)
                 print("Unable to process 'put' command.")
                 time.sleep(1)
 
@@ -120,7 +120,7 @@ class Controller:
                 print("Successfully removed",exqt[0],"from",exqt[1])
                 time.sleep(1)
             except (AttributeError, TypeError, IndexError) as e:
-                print(e)
+                #print(e)
                 print("Unable to take",exqt[0],"from",exqt[1])
                 time.sleep(1)
         ##move
@@ -130,7 +130,7 @@ class Controller:
             try:
                 newLoc = getattr(loc, exqt)
             except AttributeError as e:
-                print(e)
+                #print(e)
                 newLoc = None
 
             if newLoc is not None:
