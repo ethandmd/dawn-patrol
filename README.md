@@ -39,10 +39,42 @@ quit (Exit current game)
 Press ENTER to continue...
 ```
 ```
+Enter command: 
+inspect room
+
+Room: kitchen
+Doors:
+	Door to foyer
+	Door to stairs
+Player(s):
+	e
+Non-Playable Characters:
+	larry
+Items:
+	apple
+	chips
+	coffee
+	jelly
+
+Press ENTER to continue...
+```
+```
 Enter command:
 pickup pack
 
 Successfully picked up pack.
+```
+```
+Enter command: 
+put 20dollars woolsocks
+
+Succesfully put 20dollars in woolsocks
+```
+```
+Enter command: 
+takeout 20dollars woolsocks
+
+Successfully removed 20dollars from woolsocks
 ```
 ```
 Enter command:
