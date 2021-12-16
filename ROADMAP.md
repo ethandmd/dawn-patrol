@@ -1,6 +1,8 @@
 # Development Diary
 
 ## Logs
+### 12/15
+I skipped a few log entries. Never got the running clock to work properly. Tried running the clock in one thread and accepting user input on a different thread. Had some issues with synchronization. 
 
 ### 12/09
 It's late. I added a Vertex class, added some more unit tests (still from complete, but it gets the gist), and tweaked 
