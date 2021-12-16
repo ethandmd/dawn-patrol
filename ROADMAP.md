@@ -2,7 +2,7 @@
 
 ## Logs
 ### 12/15
-I skipped a few log entries. Never got the running clock to work properly. Tried running the clock in one thread and accepting user input on a different thread. Had some issues with synchronization. 
+I skipped a few log entries. Never got the running clock to work properly. Tried running the clock in one thread and accepting user input on a different thread. Had some issues with synchronization. Additionally I ended up not writing a lot of tests. I did this to save time so I could meet the deadline, however I think writing tests would have actually saved me time in the long run. Lesson learned.
 
 ### 12/09
 It's late. I added a Vertex class, added some more unit tests (still from complete, but it gets the gist), and tweaked 
