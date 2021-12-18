@@ -1,0 +1,409 @@
+{
+    "ckpt": {
+        "config": {
+            "edges": [
+                [
+                    "master",
+                    "hallway"
+                ],
+                [
+                    "office",
+                    "hallway"
+                ],
+                [
+                    "bathroom",
+                    "hallway"
+                ],
+                [
+                    "hallway",
+                    "foyer"
+                ],
+                [
+                    "kitchen",
+                    "foyer"
+                ],
+                [
+                    "foyer",
+                    "frontyard"
+                ],
+                [
+                    "stairs",
+                    "kitchen"
+                ],
+                [
+                    "backyard",
+                    "stairs"
+                ],
+                [
+                    "basement",
+                    "stairs"
+                ]
+            ],
+            "timeLeft": 122
+        },
+        "places": {
+            "kitchen": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": [
+                        [
+                            "larry",
+                            {
+                                "loc": "kitchen",
+                                "health": 100,
+                                "stamina": 100,
+                                "wt": 0,
+                                "cb": 0,
+                                "maxWt": 50,
+                                "maxCb": 75
+                            },
+                            {
+                                "BSTree": [
+                                    [
+                                        "scarf",
+                                        {
+                                            "wt": 1,
+                                            "cb": 1
+                                        },
+                                        null
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "apple",
+                            {
+                                "wt": 1,
+                                "cb": 1
+                            },
+                            null
+                        ],
+                        [
+                            "coffee",
+                            {
+                                "wt": 3,
+                                "cb": 2
+                            },
+                            null
+                        ],
+                        [
+                            "jelly",
+                            {
+                                "wt": 4,
+                                "cb": 2
+                            },
+                            null
+                        ]
+                    ]
+                }
+            },
+            "foyer": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": [
+                        [
+                            "chuck",
+                            {
+                                "loc": "foyer",
+                                "health": 100,
+                                "stamina": 100,
+                                "wt": 0,
+                                "cb": 0,
+                                "maxWt": 50,
+                                "maxCb": 75
+                            },
+                            {
+                                "BSTree": []
+                            }
+                        ]
+                    ]
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "puffyjacket",
+                            {
+                                "wt": 1,
+                                "cb": 5
+                            },
+                            null
+                        ],
+                        [
+                            "solarcharger",
+                            {
+                                "wt": 1,
+                                "cb": 2
+                            },
+                            null
+                        ]
+                    ]
+                }
+            },
+            "master": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": []
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "woolsocks",
+                            {
+                                "wt": 1,
+                                "cb": 1
+                            },
+                            {
+                                "BSTree": [
+                                    [
+                                        "20dollars",
+                                        {
+                                            "wt": 0,
+                                            "cb": 0
+                                        },
+                                        null
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "office": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": []
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "hoodedtowel",
+                            {
+                                "wt": 5,
+                                "cb": 8
+                            },
+                            null
+                        ],
+                        [
+                            "kalilinux",
+                            {
+                                "wt": 2,
+                                "cb": 2
+                            },
+                            null
+                        ],
+                        [
+                            "wallet",
+                            {
+                                "wt": 1,
+                                "cb": 1
+                            },
+                            null
+                        ]
+                    ]
+                }
+            },
+            "bathroom": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": []
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "toiletpaper",
+                            {
+                                "wt": 1,
+                                "cb": 2
+                            },
+                            null
+                        ],
+                        [
+                            "toothbrush",
+                            {
+                                "wt": 2,
+                                "cb": 1
+                            },
+                            null
+                        ]
+                    ]
+                }
+            },
+            "hallway": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": []
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "surfhood",
+                            {
+                                "wt": 2,
+                                "cb": 3
+                            },
+                            null
+                        ]
+                    ]
+                }
+            },
+            "stairs": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": []
+                },
+                "items": {
+                    "BSTree": []
+                }
+            },
+            "basement": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": []
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "longboard",
+                            {
+                                "wt": 10,
+                                "cb": 70
+                            },
+                            null
+                        ],
+                        [
+                            "pack",
+                            {
+                                "wt": 5,
+                                "cb": 25
+                            },
+                            {
+                                "BSTree": []
+                            }
+                        ],
+                        [
+                            "snowboard",
+                            {
+                                "wt": 8,
+                                "cb": 40
+                            },
+                            null
+                        ]
+                    ]
+                }
+            },
+            "frontyard": {
+                "players": {
+                    "BSTree": [
+                        [
+                            "ettt",
+                            {
+                                "loc": "frontyard",
+                                "health": 100,
+                                "stamina": 65.29999999999998,
+                                "wt": 0,
+                                "cb": 0,
+                                "maxWt": 50,
+                                "maxCb": 75
+                            },
+                            {
+                                "BSTree": []
+                            }
+                        ]
+                    ]
+                },
+                "npcs": {
+                    "BSTree": []
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "truck",
+                            {
+                                "wt": 5000,
+                                "cb": 10000
+                            },
+                            {
+                                "BSTree": [
+                                    [
+                                        "chips",
+                                        {
+                                            "wt": 1,
+                                            "cb": 2
+                                        },
+                                        null
+                                    ],
+                                    [
+                                        "ripcurlsuit",
+                                        {
+                                            "wt": 3,
+                                            "cb": 10
+                                        },
+                                        null
+                                    ],
+                                    [
+                                        "shortboard",
+                                        {
+                                            "wt": 9,
+                                            "cb": 30
+                                        },
+                                        null
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "backyard": {
+                "players": {
+                    "BSTree": []
+                },
+                "npcs": {
+                    "BSTree": []
+                },
+                "items": {
+                    "BSTree": [
+                        [
+                            "sitka",
+                            {
+                                "wt": 55,
+                                "cb": 60
+                            },
+                            null
+                        ],
+                        [
+                            "trailwagon",
+                            {
+                                "wt": 20,
+                                "cb": 50
+                            },
+                            {
+                                "BSTree": []
+                            }
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -58,9 +58,9 @@ class ScoreCard:
             cur.execute("SELECT * FROM scores ORDER BY points")
             res = cur.fetchall()
             for row in res:
-                print("Username:", res[0], end=", ")
-                print("Item Count:",res[1], end=", ")
-                print("Score:",res[2])
+                print("Username:", row[0], end=", ")
+                print("Item Count:",row[1], end=", ")
+                print("Score:",row[2])
                 
         except sqlite3.Error as e:
             print(e)
